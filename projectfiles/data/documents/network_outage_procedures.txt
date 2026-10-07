@@ -1,0 +1,198 @@
+PRODAPT
+Internal Policy Document
+
+Document ID: POL-NOC-004
+Title: Network Outage Classification and NOC Procedures
+Version: 2.6
+Effective date: 2026-01-15
+Owner: Network Operations Center
+Classification: Internal. Support may quote the severity definitions. Do not quote internal bridge numbers to customers.
+Applies to: All Prodapt radio sites and regional core networks in the United States.
+
+1. Purpose
+
+This document defines how Prodapt classifies an outage, what each tower status means, how the NOC works an incident, and how to read a live diagnostic. It is the source for the question "what defines a CRITICAL outage?"
+
+The outage log stores individual events (region, severity, duration, customers affected, root cause). This document stores the rules. Do not treat an example in this document as a live event.
+
+2. Severity definitions
+
+Classify an event at the highest severity whose rule matches.
+
+CRITICAL. Declare CRITICAL when any one of these is true:
+
+1. 5,000 or more customers lose voice or data service, or
+2. A regional core, packet gateway, or metro fiber ring fails, or
+3. Two or more towers in the same city are OFFLINE at the same time, or
+4. Customer-facing voice and data are fully unavailable and restoration is expected to take more than 60 minutes.
+
+A fiber cut that isolates a regional ring is CRITICAL even before the final customer count is known, because rule 2 is already met.
+An event that affects 5,000 or more customers is CRITICAL even if it is restored in under 60 minutes, because rule 1 is already met.
+
+MAJOR. Declare MAJOR when the event is not CRITICAL and any one of these is true:
+
+- 500 to 4,999 customers are affected, or
+- A single tower is OFFLINE for more than 30 minutes, or
+- Service is impaired across a site (calls or data fail intermittently) for more than 30 minutes.
+
+MINOR. Declare MINOR when all of these are true:
+
+- Fewer than 500 customers are affected, and
+- No tower is fully OFFLINE for more than 30 minutes, and
+- The impact is degraded performance or a short interruption under 30 minutes.
+
+Planned maintenance that was announced at least 48 hours in advance is not an unplanned outage. Log it as maintenance. If it overruns the announced window, classify only the overrun using the rules above.
+
+3. Tower status values
+
+OPERATIONAL
+The site is in service. A site can be OPERATIONAL and still be unhealthy. Elevated packet loss or collapsed throughput with status OPERATIONAL means the site is up and degraded. Do not tell the customer the tower is down.
+
+DEGRADED
+The site is carrying traffic below its normal capacity. Customers may see slow data or dropped sessions. This is not a full outage by itself.
+
+OFFLINE
+The site is not carrying customer traffic. Packet loss at 100 percent and throughput at zero are consistent with OFFLINE. Troubleshoot the site, not the handset.
+
+MAINTENANCE
+The site is in a planned window. Check whether the window was announced at least 48 hours ahead before discussing SLA credits. Planned maintenance is excluded from automatic SLA credits.
+
+4. Incident classifications
+
+Use exactly one classification on an open incident:
+
+POWER                  Commercial power or generator failure
+BACKHAUL               Fiber, microwave, or transport between the site and the core
+RADIO_ACCESS           Radio unit, antenna, sector, or scheduler on the tower
+CORE                   Regional packet core, mobility controller, or gateway
+SOFTWARE               Bad configuration or software fault
+PLANNED_MAINTENANCE    Announced maintenance window
+
+5. Performance interpretation guide
+
+Use the latest performance sample for the tower, not the average of older samples. Compare it to these thresholds:
+
+Signal strength (dBm)
+- Acceptable: -90 dBm or stronger (for example -72 dBm is acceptable).
+- Marginal: weaker than -90 dBm and down to -110 dBm.
+- Poor coverage: weaker than -110 dBm.
+
+Packet loss
+- Normal: 1 percent or below.
+- Elevated: above 2 percent.
+- Severe: above 5 percent.
+- Site down: 100 percent, which should match status OFFLINE.
+
+Latency
+- Normal on 5G: 40 ms or below.
+- Elevated: above 50 ms.
+
+Downlink throughput
+- A 5G tower that is OPERATIONAL and delivering below 100 Mbps downlink is degraded, even when the signal reading is acceptable.
+- 4G LTE sites normally deliver less downlink than 5G. Do not apply the 100 Mbps 5G test to a 4G LTE site. Treat 4G LTE downlink below 10 Mbps as degraded.
+
+How to combine the readings:
+
+- Status OFFLINE, or packet loss 100 percent: the site is down. Recommend field dispatch against the open incident. Do not advise the customer to factory-reset the phone as the fix.
+- Status OPERATIONAL, signal acceptable, packet loss elevated or downlink below 100 Mbps on 5G: the radio path to the phone is fine and the site is still sick. Recommend checking the open incident, suspect backhaul or the radio scheduler, and tell the customer the site is up but dropping or slowing sessions.
+- Signal poor (weaker than -110 dBm) and the site otherwise healthy: this is a coverage or indoor problem. Recommend a window test, Wi-Fi calling, and the 5G FAQ. Do not open a CRITICAL incident for one indoor handset.
+- Status MAINTENANCE with classification PLANNED_MAINTENANCE: tell the customer the window end time. Do not file an SLA credit for the announced window.
+
+6. NOC procedure
+
+Step 1. Detect. Alarm, customer pattern, or a diagnostic that shows OFFLINE or severe loss.
+Step 2. Classify using section 2 and section 4. Write the severity and the classification on the incident.
+Step 3. Open or attach an incident. One active incident per site per fault. Do not open a second incident for the same tower and the same fault.
+Step 4. Start the MTTR clock at the outage start, not at the time the ticket was typed.
+       CRITICAL restore target: 4 hours. Update customers every 30 minutes.
+       MAJOR restore target: 8 hours. Update every 60 minutes.
+       MINOR restore target: 24 hours. Update every 4 hours.
+Step 5. Bridge. CRITICAL events require a live bridge with the region on call. MAJOR events bridge if restoration will exceed 2 hours.
+Step 6. Restore service, then take one confirming performance sample.
+Step 7. Close the incident only after the confirming sample is healthy (packet loss at or below 1 percent, status no longer OFFLINE or DEGRADED).
+Step 8. Write the historical outage row: region, severity, start, end, duration in hours, customers affected, root cause, and status RESOLVED. The open incident queue is not the historical log. Resolved events must not remain on the open queue.
+Step 9. Post-incident review is required for every CRITICAL event and for any event that missed its MTTR target. The review is internal and is not quoted to customers.
+
+7. Customer communication rules for NOC findings
+
+Support may share: tower status, city, whether an incident is open, the incident id, the customer impact (down, slow, or dropping), and the last update time.
+Support may not share: bridge phone numbers, vendor names on a contract, or a guess about fiber routes.
+If no open incident exists and the latest sample is healthy, say the site looks healthy and follow the 5G FAQ for handset steps.
+If an open incident exists, do not describe the tower as healthy just because status is OPERATIONAL.
+
+8. Regions
+
+Prodapt operates five regions for both towers and outages: Midwest, Northeast, Southeast, Southwest, and West.
+A regional summary counts towers by status inside one region. It is not the same report as a historical outage count. Outage history is classified by the severity rules in section 2 and stored in the outage log.
+
+9. Use the latest sample
+
+Tower performance is a time series. A site can look healthy for several days and then fail on the newest reading.
+Diagnostics, packet-loss rankings, and "is the tower up right now" all use the newest recorded time for that tower.
+Do not average the week. An average will hide a site that went offline on the latest sample, and it will hide a site whose loss climbed only in the last day.
+If the newest sample is healthy and an older sample was bad, say the site has recovered and quote the newest numbers.
+
+10. How to read a diagnostic
+
+Answer in this order: tower status, technology, city and region, newest signal, newest packet loss, newest latency, newest downlink, and any open incident id.
+
+Pattern: status OPERATIONAL, 5G, signal acceptable (stronger than -90 dBm), packet loss above 2 percent, downlink below 100 Mbps.
+The site is up. The phone is not the first suspect. Loss is elevated and throughput is degraded. Look for an open radio or backhaul incident. Tell the customer sessions can drop even though the signal looks fine.
+
+Pattern: status OPERATIONAL, signal acceptable, packet loss at or below 1 percent, downlink well above 100 Mbps on 5G.
+The site looks healthy. Use the 5G FAQ for handset and indoor steps. Do not invent an outage.
+
+Pattern: status DEGRADED, packet loss above 5 percent, signal weaker than -90 dBm.
+Severe loss and marginal signal. Quote the open incident. Expect a field visit. Do not promise same-hour restoration.
+
+Pattern: status OFFLINE, or packet loss 100 percent, throughput 0.
+The site is down. Dispatch against the open incident. Do not factory-reset the customer's phone as the fix. 4G LTE and 5G use the same offline rule.
+
+Pattern: status MAINTENANCE and the incident classification is PLANNED_MAINTENANCE.
+Quote the window end. Planned maintenance announced at least 48 hours ahead is not an SLA credit by itself.
+
+Pattern: status OPERATIONAL, newest sample healthy, incident status MONITORING.
+The site is in service. Say it is being watched. Do not tell the customer it is down.
+
+A regional summary is a count of towers by status in one region. It is not a count of historical outages. Historical questions (how many CRITICAL, which region, how long, how many customers) use the outage log and section 2.
+
+11. Runbooks
+
+POWER
+Confirm status OFFLINE or a power alarm. Check the generator. One technician on site for a single tower. If a regional gateway also lost power, classify the outage CRITICAL under section 2 and start the 4-hour MTTR clock. Customer message: the site has no power, here is the incident id, updates follow the cadence in section 6.
+
+BACKHAUL
+The tower may stay DEGRADED or even OPERATIONAL while throughput collapses. Fiber cuts on a metro ring are CRITICAL when they isolate a region or affect 5,000 or more customers. A single congested hop affecting under 500 customers is MINOR or MAJOR based on section 2. Customer message: the site can see the phone, but the path behind the site is impaired.
+
+RADIO_ACCESS
+Radio unit, antenna, or scheduler. Intermittent drops with an acceptable signal and rising packet loss belong here. Replace the radio if loss stays above 5 percent across the newest samples. Customer message: the site is on the air and is dropping sessions; a ticket is open.
+
+CORE
+Regional packet gateway or mobility controller. This is CRITICAL under rule 2 even when the customer count is under 5,000. Customer message: a regional system failed, not the handset. Do not quote internal host names.
+
+SOFTWARE
+Bad configuration or a failed push. Roll back first. CRITICAL if a regional controller is down or 5,000 or more customers are affected. Otherwise MAJOR or MINOR by the customer count.
+
+PLANNED_MAINTENANCE
+The window must have been announced at least 48 hours ahead. Keep the tower status at MAINTENANCE for the window. An overrun becomes an unplanned event and only the overrun is classified with section 2.
+
+12. Worked questions
+
+What defines a CRITICAL outage?
+Any one of: 5,000 or more customers lost voice or data; a regional core, packet gateway, or metro fiber ring failed; two or more towers in the same city are OFFLINE; or voice and data are fully down and restoration is expected to take more than 60 minutes.
+
+What is the difference between MAJOR and CRITICAL?
+MAJOR is 500 to 4,999 customers, or one tower OFFLINE for more than 30 minutes, or impaired service for more than 30 minutes, and none of the CRITICAL rules match. Slow data with calls still completing is not CRITICAL by itself.
+
+Which region had the most CRITICAL outages?
+Count rows in the outage log where severity is CRITICAL, grouped by region. Do not count MAJOR and MINOR in that total. Do not answer from this document. The log is the source. A September-only question is a different cut from an all-year question. Filter on the start time before comparing.
+
+Which towers have the highest packet loss?
+Rank towers by packet loss on the newest sample only. Include offline sites. A site at 100 percent loss ranks above a site at 8 percent even if the offline site looked fine earlier in the week.
+
+My 5G drops near a tower that still shows as operational.
+Read the newest sample and any open incident before answering. Operational plus elevated loss means the site is sick. Operational plus a healthy newest sample means follow the 5G FAQ.
+
+13. Document control
+
+CRITICAL is defined by section 2. The 5,000 customer rule, the regional-core rule, the two-tower rule, and the 60 minute full-loss rule are all still in force. MTTR targets remain 4 hours for CRITICAL, 8 hours for MAJOR, and 24 hours for MINOR.

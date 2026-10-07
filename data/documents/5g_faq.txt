@@ -1,0 +1,162 @@
+PRODAPT
+Internal Policy Document
+
+Document ID: POL-5G-005
+Title: 5G Coverage, Troubleshooting, and Device Compatibility FAQ
+Version: 1.9
+Effective date: 2026-04-01
+Owner: Network Product
+Classification: Internal. Answers in this FAQ may be paraphrased for customers.
+Applies to: Prodapt 5G and 4G LTE handset service in the United States. Roaming behavior is in the roaming policy. Bill credits are in the billing and SLA policies.
+
+1. Purpose
+
+This FAQ answers how Prodapt 5G works, why it is often slower indoors, which phones are compatible, and the handset checks support should try before blaming a tower.
+
+This FAQ does not contain live tower status, packet loss, open incidents, or outage history. Those come from the network database. If the customer names a tower id or a city and says service is dropping right now, the network diagnostic has to be run. Do not answer that question from this FAQ alone.
+
+2. What 5G means on Prodapt
+
+Prodapt uses three 5G layers:
+
+- Low-band 5G. Wide coverage, indoor reach similar to LTE, speeds often close to strong LTE. Used to keep a 5G icon in suburban and rural areas.
+- Mid-band 5G on bands n41 and n77. This is the capacity layer in cities. It is the layer customers mean when they expect a clear speed increase over LTE.
+- Millimeter wave (mmWave) on bands n260 and n261. Very high speed, very short range, poor building penetration. Used in dense downtown pockets such as transit hubs and stadiums. A phone must specifically support mmWave. Most phones that "have 5G" do not.
+
+The phone decides the layer. The customer cannot force mid-band from the bill plan. Unlimited Plus, Unlimited Essential, Business Unlimited, and Enterprise Mobile all include 5G where the phone and the site support it. There is no extra 5G access fee.
+
+3. Why 5G is slow or drops indoors
+
+Building materials attenuate radio signals. Concrete, low-emissivity glass, and metal reduce mid-band. They block millimeter wave almost completely.
+
+Typical indoor loss is 10 to 20 dB on mid-band and far more on millimeter wave. A phone that shows an acceptable outdoor signal can be marginal or poor once the customer walks inside. As a rule of thumb, an outdoor reading near -70 dBm can land near -90 to -100 dBm indoors, and a millimeter-wave session will usually fall back to mid-band or LTE.
+
+Slow indoor 5G is usually one of these:
+
+- The phone was on millimeter wave outside and fell back indoors. Speeds drop sharply. This is expected.
+- The phone is on mid-band but the indoor signal is marginal. Throughput falls and sessions may drop while the signal indicator still shows a few bars, because bars are not a packet-loss reading.
+- The site itself is congested or impaired. A strong signal with dropping sessions is a site problem, not an indoor-coverage problem. That case is decided by tower status, packet loss, and throughput, which are not in this FAQ.
+- Wi-Fi is connected but the Wi-Fi path is failing, and the customer believes it is cellular. Ask whether the drop happens with Wi-Fi turned off.
+
+What to tell the customer about indoor slowness:
+
+1. Step near a window or step outside and retest. If it recovers, the building is the attenuator.
+2. Turn on Wi-Fi calling for voice if the customer has reliable Wi-Fi. Wi-Fi calling is included on all Prodapt plans at no charge.
+3. Confirm the phone supports n41 and n77 (section 5). A phone with low-band only will feel like LTE inside buildings.
+4. If the problem continues outdoors, or the customer can name a tower or a street corner where it drops with a strong signal, stop the handset checklist and run a network diagnostic. Do not keep resetting a phone when the site is the suspect.
+
+4. Dropped 5G sessions when the signal looks fine
+
+Bars and a single signal reading do not prove the site is healthy. Sessions drop when packet loss is elevated or when downlink throughput collapses, including on a site whose status is still operational and whose signal is still acceptable (around -70 dBm).
+
+Handset steps, in order, and only when a site diagnostic has not already shown loss or an open incident:
+
+1. Toggle airplane mode for 15 seconds.
+2. Confirm the phone is not in LTE-only mode.
+3. Install the current carrier settings and operating system update.
+4. Remove and reseat the SIM, or re-download the eSIM profile if the line uses eSIM.
+5. Test with Wi-Fi off, standing still, for one minute.
+6. If a second Prodapt phone at the same spot drops the same way, it is not the first handset. Run the site diagnostic.
+
+Factory reset is not the first step and is not the fix for a site impairment.
+
+5. Device compatibility
+
+A phone is compatible with Prodapt 5G mid-band when it supports bands n41 and n77 and is on the list below. Low-band only phones may show a 5G icon and still feel like LTE.
+
+Supported for Prodapt mid-band 5G (n41 and n77):
+- Apple iPhone 12 and newer, including iPhone 13, iPhone 13 mini, iPhone 13 Pro, and iPhone 13 Pro Max
+- Apple iPhone SE (3rd generation, 2022) and newer
+- Samsung Galaxy S21 and newer, Galaxy A54 and newer
+- Google Pixel 6 and newer
+
+Millimeter wave on Prodapt, in addition to mid-band, requires a US mmWave model:
+- iPhone 12, 13, 14, 15, and 16 US models (not the mini models, which do not include mmWave)
+- Samsung Galaxy S21, S22, S23, and S24 Ultra US models
+- Pixel 6 Pro, Pixel 7 Pro, Pixel 8 Pro, and Pixel 9 Pro US models
+
+Not compatible with Prodapt 5G:
+- iPhone 11 and older. These are LTE only. They still work on the Prodapt 4G LTE network. An upgrade is optional, not required for voice and basic data. Trade-in values are in the device upgrade policy.
+- Unlocked phones that lack n41 and n77, even if they show a 5G logo for another carrier's bands.
+
+An iPhone 13 is compatible with Prodapt 5G mid-band. It is not the cause of a site-wide drop by itself. Whether the customer may trade that iPhone 13 in is answered by the device upgrade policy, not by this FAQ.
+
+6. Coverage expectations
+
+Prodapt sells 5G coverage as outdoor coverage at the address level. Indoor coverage is not guaranteed, especially for millimeter wave and especially in basements and interior rooms.
+A coverage map gap outdoors, confirmed by a diagnostic with poor signal (weaker than -110 dBm) and a healthy site, is a coverage limitation. Offer Wi-Fi calling. Do not invent a truck roll from this FAQ.
+5G Home is a fixed indoor receiver with its own install rules. It is not a handset plan and does not use this handset checklist.
+
+7. When to stop using this FAQ
+
+Stop and use the network diagnostic when the customer:
+
+- Names a tower id (the id looks like a state abbreviation, a hyphen, and a number)
+- Says service drops in one neighborhood but not others
+- Reports an outage, a dead site, or many people affected
+- Has already completed the handset steps in section 4
+
+Stop and use the SLA policy when the customer asks whether an outage earns a credit.
+Stop and use the roaming policy when the customer is outside the United States.
+
+8. Symptom guide
+
+No bars, or the phone says SOS or emergency calls only.
+The phone is not registered on Prodapt or any roaming partner. Have the customer toggle airplane mode, confirm the SIM is seated, and confirm the line is not suspended. If a second Prodapt phone in the same spot also shows SOS, stop handset steps and run a tower diagnostic. One phone on SOS and another working is the handset or the SIM.
+
+5G icon is on, speed test is slow, only indoors.
+Section 3. Window test. Wi-Fi calling for voice. This is the usual indoor mid-band or millimeter-wave case. If the slow speed continues outdoors at the same corner, run a tower diagnostic.
+
+5G icon is on, signal looks strong, sessions still drop.
+Bars are not packet loss. A strong reading can sit next to elevated loss or collapsed downlink. Run a tower diagnostic when the customer can name a place or a tower. Do not factory-reset first.
+
+Works on Wi-Fi, fails on cellular.
+Turn Wi-Fi off and retest. If cellular then fails in one neighborhood only, run a tower diagnostic. If cellular fails everywhere and Wi-Fi works, check suspension, SIM, and whether the line is active before blaming a tower.
+
+Hotspot or tethering is slow while the phone itself is fine.
+Hotspot uses the same plan. Unlimited Plus, Unlimited Essential, Business Unlimited, and Enterprise Mobile include hotspot. After a heavy hotspot day the phone may be deprioritized behind other traffic on a busy site. Deprioritization is not an outage and is not an SLA credit. It clears as the site gets quieter. 5G Home is not a hotspot line.
+
+Dual SIM, and Prodapt is the second line.
+The phone may prefer the other SIM for data. Set the Prodapt line as the data line and retest. This is a handset setting, not a tower fault.
+
+eSIM will not download.
+The line must be ACTIVE, not suspended or cancelled. The phone must be on Wi-Fi or on a working cellular connection from the other SIM. A failed eSIM download is not a coverage gap.
+
+Voicemail or calls fail, data works.
+Confirm VoLTE is on. Prodapt voice on 5G and LTE uses VoLTE. A phone forced to 2G or with VoLTE off will drop calls on a healthy data site. Turn VoLTE on before opening a tower ticket.
+
+5G at home is a fixed gateway, not a phone.
+5G Home uses a gateway at the service address. It does not roam. It does not use the handset checklist. A gateway offline at the address is a site or install issue, not an iPhone issue.
+
+9. Settings that are safe to quote
+
+Prodapt does not require a custom APN on current iPhone and major Android models. If an unlocked phone asks for an APN, use the APN name prodapt, the APN prodapt, and leave username and password empty.
+Wi-Fi calling is included at no charge on every plan.
+There is no paid "5G booster" add-on. Anyone selling one is not Prodapt.
+Low-band keeps a 5G icon in suburban and rural areas. Mid-band (n41 and n77) is the city capacity layer. Millimeter wave is downtown pockets only and falls off indoors.
+
+10. More compatibility notes
+
+iPhone 13, 13 mini, 13 Pro, and 13 Pro Max support Prodapt mid-band 5G.
+iPhone 13 mini does not support millimeter wave. iPhone 13, 13 Pro, and 13 Pro Max US models do.
+iPhone 11 and older are LTE only. They still place calls and use data on the 4G LTE network. An upgrade is optional.
+A phone bought for another carrier must be unlocked and must support n41 and n77 before it is treated as 5G-capable on Prodapt.
+Watches paired to a supported iPhone use the phone's cellular plan. A watch with its own number is a second line and needs its own SIM or eSIM. Trade-in values for phones are in the device upgrade policy. This FAQ does not set trade-in prices.
+
+11. Worked questions
+
+Why is my 5G slow indoors?
+Buildings cut mid-band by about 10 to 20 dB and block millimeter wave. Step to a window, turn on Wi-Fi calling, and confirm the phone supports n41 and n77. If it is also slow outdoors, run a tower diagnostic.
+
+Can I use an iPhone 13 on Prodapt 5G?
+Yes for mid-band. That does not say whether the customer may trade it in, and it does not say a particular tower is healthy.
+
+The whole neighborhood is down.
+This FAQ cannot confirm an outage. Use the outage log and the tower diagnostic. Credits, if any, come from the SLA policy after the duration and account type are known.
+
+I am traveling outside the United States and 5G is slow.
+Use the roaming policy. This FAQ is for the Prodapt network inside the United States. Japan and Western Europe prices are not answered here.
+
+12. Document control
+
+Indoor loss of 10 to 20 dB on mid-band, Wi-Fi calling at no charge, and the iPhone 12-and-newer compatibility rule including iPhone 13 are unchanged in version 1.9. Live site health remains outside this document.

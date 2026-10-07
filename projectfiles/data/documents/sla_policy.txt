@@ -1,0 +1,251 @@
+PRODAPT
+Internal Policy Document
+
+Document ID: POL-SLA-001
+Title: Service Level Agreement and Outage Credit Policy
+Version: 4.1
+Effective date: 2026-01-15
+Owner: Customer Experience, with Network Operations concurrence
+Classification: Internal. Support agents may quote the credit rules to customers.
+Applies to: Prodapt consumer, business, and enterprise mobile, 5G home, and voice services in the United States.
+
+1. Purpose
+
+This policy states the uptime targets Prodapt publishes, the mean time to restore (MTTR) targets Network Operations works to, and the rules that decide whether a customer receives an automatic service credit after an outage.
+
+Live outage facts (which region, how long, how many customers, what root cause) are not in this document. Those facts are in the network outage log. A credit decision needs both: the outage facts from the log, and the eligibility rules in this policy.
+
+2. Monthly uptime targets
+
+These targets are reporting goals for a calendar month. They do not, by themselves, create a bill credit. Automatic credits are decided only by the continuous-outage table in section 4.
+
+Account type     Monthly uptime target     What the target means
+Consumer         99.5 percent              About 3 hours 39 minutes of downtime in a 30-day month
+Business         99.9 percent              About 43 minutes of downtime in a 30-day month
+Enterprise       99.99 percent             About 4 minutes of downtime in a 30-day month
+
+Uptime is measured on the Prodapt radio access and core network for the customer's service region. It does not include the customer's handset, Wi-Fi router, inside wiring, or a third-party network while roaming.
+
+3. MTTR targets
+
+Severity     Restore target     Customer update cadence while the event is open
+CRITICAL     4 hours            Every 30 minutes
+MAJOR        8 hours            Every 60 minutes
+MINOR        24 hours           Every 4 hours
+
+MTTR is the time from the outage start to restoration of voice and data for the affected region or site. Missing an MTTR target is an operations issue. It does not change the credit thresholds in section 4. A CRITICAL event that is restored in 3 hours has met MTTR and still might not qualify a Consumer for a credit, because the Consumer threshold is 8 hours.
+
+4. Automatic SLA credit eligibility
+
+A customer receives an automatic service credit only when all of the following are true:
+
+a. The event is a Prodapt-owned network outage. Customer equipment, a dead handset battery, Wi-Fi, and indoor coverage gaps are not outages under this policy.
+
+b. The outage is unplanned. Planned maintenance that was announced at least 48 hours in advance does not qualify, even if the maintenance lasts longer than the thresholds below. If a planned window overruns and the overrun itself is logged as an unplanned outage, only the overrun time counts.
+
+c. The customer's service address is in the affected region recorded on the outage.
+
+d. The continuous duration of the outage is at least the minimum for the customer's account type:
+
+Account type     Minimum continuous outage for an automatic SLA credit
+Consumer         8 hours
+Business         4 hours
+Enterprise       2 hours
+
+These are hard thresholds. Prodapt does not round a shorter outage up to the next threshold.
+
+Worked example for a 6 hour outage:
+
+A continuous outage lasts 6 hours.
+- A Business account qualifies, because 6 hours is at least 4 hours.
+- An Enterprise account qualifies, because 6 hours is at least 2 hours.
+- A Consumer account does not qualify for an automatic SLA credit, because 6 hours is below the 8 hour Consumer threshold.
+
+A Consumer on a 6 hour outage may ask for a goodwill review. Goodwill is not guaranteed, is not an SLA credit, and follows the billing dispute policy (including the 50.00 USD auto-approval limit) if any credit is offered.
+
+If the person asking does not give an account type, the correct answer is the table above. Do not assume Consumer. Do not promise a credit until the account type and the service region are known.
+
+5. What "continuous" means
+
+The duration is one uninterrupted loss of service.
+
+- A restoration of less than 5 minutes that fails again does not reset the clock. The intervals are added together.
+- A restoration of 5 minutes or more starts a new interval. Only an interval that itself meets the threshold qualifies.
+- Degraded but usable service (calls complete, data is slow) is not a total loss and does not start the SLA clock. Those events are classified under the outage procedure as MAJOR or MINOR and do not earn an automatic SLA credit under this policy.
+
+6. Credit amount, when the customer is eligible
+
+Credit in USD = (outage hours / 24) x the customer's monthly recurring charge.
+
+Round to the nearest cent.
+The minimum automatic credit is 5.00 USD.
+The maximum automatic credit is one full month of monthly recurring charge.
+Taxes are not refunded as a separate line. The credit is calculated on the pre-tax monthly recurring charge only.
+The credit is applied to the account balance. It is not paid out as cash.
+
+Worked examples:
+
+- Business Unlimited at 89.99 USD per month, 6 hour qualifying outage:
+  (6 / 24) x 89.99 = 22.50 USD. This is above the 5.00 USD minimum and below one month of charges, so the credit is 22.50 USD.
+
+- Enterprise Mobile at 249.00 USD per month, 6 hour qualifying outage:
+  (6 / 24) x 249.00 = 62.25 USD.
+
+- Consumer Unlimited Plus at 65.99 USD per month, 6 hour outage:
+  No automatic credit. The duration is under 8 hours. Do not compute a Consumer amount for a 6 hour outage.
+
+- Consumer Unlimited Plus at 65.99 USD per month, 10 hour qualifying outage:
+  (10 / 24) x 65.99 = 27.50 USD.
+
+Multiple qualifying outages in the same month are credited separately. The sum of automatic SLA credits in one calendar month cannot exceed one month of monthly recurring charge.
+
+7. How a customer asks, and how long they have
+
+The customer, or a support agent acting for the customer, must ask within 30 days after the outage end time.
+The request should include the account number, the service region, and the approximate start time.
+Support confirms the outage in the outage log before quoting a dollar amount.
+If the outage is still ONGOING, do not calculate a final credit. Tell the customer the clock is still running and the credit will be based on the final duration.
+
+8. Exclusions
+
+No automatic SLA credit is due when:
+
+- The service address is outside the affected region.
+- The account type threshold in section 4 is not met.
+- The event was planned maintenance announced at least 48 hours ahead.
+- The customer was roaming on another carrier. Roaming problems follow the roaming policy, not this SLA.
+- The failure is inside the customer's premises (handset, battery, SIM seated incorrectly, Wi-Fi, third-party router).
+- The account was suspended for non-payment during the outage window.
+- The customer already received a goodwill or SLA credit for the same outage and the same line.
+
+9. Relationship to billing credits
+
+An SLA credit is still a billing credit. Posting it must follow the billing disputes policy:
+
+- If the calculated credit is 50.00 USD or less, it may be applied immediately.
+- If the calculated credit is greater than 50.00 USD, it must be recorded as pending supervisor approval and must not reduce the balance until that approval.
+
+The Enterprise example in section 6 (62.25 USD) is above 50.00 USD and therefore needs approval before the balance changes. The Business example (22.50 USD) may be applied immediately.
+
+10. What support should tell the customer
+
+State the account type threshold that applied, the outage duration and region taken from the outage log, and whether the customer is eligible.
+Do not invent a duration or a customer count. If the log has not been checked, say that the outage record still needs to be confirmed.
+Do not promise a credit for a Consumer on an outage shorter than 8 hours.
+Quote the document id POL-SLA-001 when the customer asks which policy was used.
+
+11. Credit amounts by plan
+
+Use the monthly recurring charge on the customer's subscription. Do not multiply that fee by the line count. A Business Unlimited account billed 89.99 USD qualifies on 89.99 USD even when the account has several lines.
+
+The formula is (outage hours / 24) times the monthly recurring charge, rounded to the nearest cent, with a minimum of 5.00 USD and a maximum of one month of that charge. Compute a dollar amount only after section 4 says the account type is eligible.
+
+Monthly recurring charges used with this policy:
+
+Plan                    Account type     Monthly recurring charge
+Unlimited Essential     Consumer         45.00 USD
+5G Home                 Consumer         50.00 USD
+Unlimited Plus          Consumer         65.99 USD
+Business Unlimited      Business         89.99 USD
+Enterprise Mobile       Enterprise       249.00 USD
+
+Consumer amounts, eligible only at 8 hours or more:
+
+Hours     Unlimited Essential     5G Home     Unlimited Plus
+8         15.00                   16.67       22.00
+10        18.75                   20.83       27.50
+12        22.50                   25.00       33.00
+24        45.00                   50.00       65.99
+
+A Consumer outage of 2, 3, 4, 5, 6, or 7 hours produces no automatic credit on any consumer plan, including Unlimited Plus at 65.99 USD and 5G Home at 50.00 USD.
+
+Business Unlimited amounts, eligible at 4 hours or more:
+
+Hours     Credit        Approval under the billing policy
+4         15.00         APPLIED, because 15.00 is within 50.00
+6         22.50         APPLIED
+8         30.00         APPLIED
+10        37.50         APPLIED
+12        45.00         APPLIED
+24        89.99         PENDING_APPROVAL, because 89.99 is over 50.00
+
+A Business outage of 1, 2, or 3 hours produces no automatic credit.
+
+Enterprise Mobile amounts, eligible at 2 hours or more:
+
+Hours     Credit        Approval under the billing policy
+2         20.75         APPLIED
+4         41.50         APPLIED
+6         62.25         PENDING_APPROVAL, over 50.00
+8         83.00         PENDING_APPROVAL
+10        103.75        PENDING_APPROVAL. A billing supervisor is enough, because 103.75 is over 50.00 and under 200.00.
+12        124.50        PENDING_APPROVAL
+24        249.00        PENDING_APPROVAL, and a manager must approve because 249.00 is over 200.00
+
+An Enterprise outage under 2 hours produces no automatic credit.
+
+12. Worked questions
+
+How long was the outage, and do I get a credit?
+Duration, region, severity, and customers affected come from the outage log. This policy does not store those facts. After the log is known, apply section 4 using the account type on the subscription.
+
+A 6 hour outage. Who is eligible?
+Business: yes, credit 22.50 USD on Business Unlimited, and that credit may be applied immediately.
+Enterprise: yes, credit 62.25 USD on Enterprise Mobile, and that credit must be PENDING_APPROVAL.
+Consumer: no automatic credit on Unlimited Plus, Unlimited Essential, or 5G Home.
+
+A 4 hour outage. Who is eligible?
+Business: yes, 15.00 USD on Business Unlimited.
+Enterprise: yes, 41.50 USD on Enterprise Mobile, which may be applied immediately.
+Consumer: no.
+
+A 2 hour outage. Who is eligible?
+Enterprise only. 20.75 USD on Enterprise Mobile. Business and Consumer are not eligible.
+
+An 8 hour outage. Who is eligible?
+All three account types. Consumer Unlimited Plus is 22.00 USD. Business Unlimited is 30.00 USD. Enterprise Mobile is 83.00 USD and must be pending approval.
+
+A 3 hour outage for a Consumer on Unlimited Plus.
+Not eligible. Do not quote 8.25 USD or any other pro-rated amount.
+
+The customer will not give an account type.
+Quote the three thresholds (Consumer 8, Business 4, Enterprise 2) and say the dollar amount depends on the plan. Do not guess Consumer.
+
+The service address is not in the affected region.
+No credit, regardless of duration.
+
+The outage is still ongoing.
+Do not compute a final credit. Say the clock is still running.
+
+The event was planned maintenance announced 72 hours ahead.
+No automatic SLA credit for the announced window.
+
+The account was suspended for non-payment during the outage.
+No automatic SLA credit.
+
+The customer was roaming abroad during the outage.
+No SLA credit. Roaming follows the roaming policy.
+
+Two qualifying outages in one month.
+Credit each one, then cap the sum at one month of monthly recurring charge.
+
+The customer already received a goodwill credit for the same outage.
+Do not post a second credit for the same outage and the same line.
+
+A full day outage, 24 hours.
+The credit equals one month of monthly recurring charge and then stops. Extra hours beyond 24 in that same event do not increase it. Enterprise at 249.00 USD for a 24 hour outage is pending approval and also needs a manager because it is over 200.00 USD.
+
+13. Goodwill, which is not an SLA credit
+
+A Consumer below 8 hours, or any customer outside the rules in section 4, may ask for goodwill. Goodwill is discretionary. It is not promised by this policy. If a supervisor offers goodwill, the amount still follows the billing disputes policy: 50.00 USD or less may be applied, and any amount over 50.00 USD is pending approval and does not reduce the balance until approved.
+
+14. What to read before answering
+
+1. Outage log: region, continuous duration, whether voice and data were fully lost, whether the event is resolved, whether it was planned maintenance.
+2. Subscription: account type, plan name, monthly recurring charge, service region, and whether the account was suspended.
+3. This policy: the threshold and the dollar table.
+4. Billing disputes policy: APPLIED versus PENDING_APPROVAL when the dollar amount is known.
+
+15. Document control
+
+This version replaces POL-SLA-001 version 4.0. The Consumer threshold remains 8 hours, the Business threshold remains 4 hours, and the Enterprise threshold remains 2 hours. No region has a special threshold. Midwest, Northeast, Southeast, Southwest, and West use the same table.

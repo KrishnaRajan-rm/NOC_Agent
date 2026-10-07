@@ -1,0 +1,245 @@
+PRODAPT
+Internal Policy Document
+
+Document ID: POL-ROAM-002
+Title: International Roaming, Travel Pass, and Spend Cap Policy
+Version: 3.3
+Effective date: 2026-03-01
+Owner: Consumer Product, Roaming
+Classification: Internal. Support agents may quote zone rates to customers.
+Applies to: Prodapt mobile lines with international roaming enabled. 5G Home is a fixed service and does not roam.
+
+1. Purpose
+
+This policy is the source of truth for what a Prodapt customer pays to use a phone outside the United States. It defines Zones A through D, Travel Pass daily rates, pay-per-use rates, and the spend cap.
+
+It does not list which towers are up, and it does not list charges already posted to a bill. Posted charges are in the billing system. If a roaming charge looks duplicated, use the billing disputes policy.
+
+2. Zones
+
+Zone A — Canada and Mexico
+Countries: Canada, Mexico.
+
+Zone B — Western Europe
+Countries: Austria, Belgium, Denmark, Finland, France, Germany, Ireland, Italy, Luxembourg, Netherlands, Norway, Portugal, Spain, Sweden, Switzerland, United Kingdom.
+Western Europe in this policy means Zone B and only the countries in this list. Eastern Europe is not Zone B.
+
+Zone C — selected Asia-Pacific partners
+Countries: Japan, South Korea, Australia, New Zealand.
+Japan is in Zone C. Japan is not in Zone B and is not charged at Western Europe rates.
+
+Zone D — rest of world
+Every other country where Prodapt has a roaming partner. If a country is not listed in Zone A, B, or C, it is Zone D.
+Prodapt does not offer satellite roaming, maritime roaming, or in-flight roaming. Those sessions are blocked.
+
+3. Travel Pass daily rates
+
+A Travel Pass covers one line for one calendar day in the customer's local time, from 00:00 through 23:59 in that time zone. A day is billed only if the line registers on a foreign network that day.
+
+Zone     Travel Pass price     High-speed data included     After the high-speed allotment
+Zone A   5.00 USD per day      5 GB                         Reduced to 256 kbps for the rest of that day
+Zone B   10.00 USD per day     5 GB                         Reduced to 256 kbps for the rest of that day
+Zone C   12.00 USD per day     2 GB                         Reduced to 256 kbps for the rest of that day
+Zone D   15.00 USD per day     1 GB                         Reduced to 256 kbps for the rest of that day. Voice is not included; see pay-per-use.
+
+Talk and text while a Zone A, B, or C Travel Pass is active:
+- Unlimited calls and texts to the United States.
+- Unlimited calls and texts to numbers in the country where the customer is roaming.
+- Calls to other countries are pay-per-use at the Zone D voice rate.
+
+A Travel Pass does not include tethering beyond the high-speed allotment, and it does not include international calls placed from the United States to another country. Those are a separate international long-distance rate of 0.15 USD per minute.
+
+4. Plan inclusions
+
+Unlimited Plus includes Zone A. A customer on Unlimited Plus pays 0.00 USD for Zone A roaming. They do not need a Zone A Travel Pass. Zone B, Zone C, and Zone D are not included on Unlimited Plus.
+
+Unlimited Essential does not include any zone. Zone A on Unlimited Essential is the 5.00 USD Travel Pass or pay-per-use.
+
+Business Unlimited includes Zone A and gives a 50 percent discount on Zone B Travel Pass days (5.00 USD instead of 10.00 USD). Zone C and Zone D are full price.
+
+Enterprise Mobile includes Zone A and Zone B. Zone C and Zone D are full price. Enterprise Mobile still has the spend cap in section 6 for any pay-per-use usage.
+
+5G Home cannot roam. Do not quote a Travel Pass for a 5G Home line.
+
+5. Pay-per-use rates, if the customer does not add a Travel Pass
+
+These rates apply only on days when a Travel Pass is not active for that zone.
+
+Zone     Data              Voice to the US or local     Text to the US or local
+Zone A   0.05 USD per MB   0.10 USD per minute          0.05 USD per message
+Zone B   0.15 USD per MB   0.29 USD per minute          0.15 USD per message
+Zone C   0.20 USD per MB   0.49 USD per minute          0.25 USD per message
+Zone D   2.00 USD per MB   1.99 USD per minute          0.50 USD per message
+
+Pay-per-use data is billed per megabyte, rounded up to the next whole megabyte. There is no unlimited pay-per-use plan.
+
+6. Spend cap
+
+Every line has a default roaming spend cap of 100.00 USD per billing cycle.
+The cap counts pay-per-use data, pay-per-use voice, and pay-per-use text.
+Travel Pass daily fees do not count toward the 100.00 USD cap. They are flat add-on charges and they continue to bill on days the line is used abroad.
+When pay-per-use charges reach the cap, pay-per-use data roaming stops. The customer can still call emergency services. The customer can raise the cap in the Prodapt app to 200.00 USD or 500.00 USD, or remove it for the rest of the cycle. A support agent may raise the cap only after verifying the account PIN.
+The cap resets on the billing close date. Unused cap does not roll over.
+
+7. Country answers support must be able to give
+
+Japan
+Japan is Zone C.
+The Zone C Travel Pass is 12.00 USD per day and includes 2 GB of high-speed data, then 256 kbps.
+Without a Travel Pass, Japan data is 0.20 USD per MB, voice is 0.49 USD per minute, and text is 0.25 USD per message.
+Unlimited Plus does not include Japan. Unlimited Plus includes only Zone A (Canada and Mexico).
+5G roaming in Japan is available in Tokyo, Osaka, and Kyoto when the handset supports 5G roaming and the partner (NTT Docomo, KDDI, or SoftBank) has 5G. Using 5G does not change the price. The customer pays the Zone C rate either way.
+The default spend cap of 100.00 USD still applies to pay-per-use. A customer who expects to use data every day should add the 12.00 USD Travel Pass instead of pay-per-use, because 500 MB of pay-per-use data in Japan is already 100.00 USD (500 x 0.20).
+
+Western Europe
+Western Europe is Zone B. Use the country list in section 2. If the country is not on that list, it is not Western Europe for billing purposes.
+The Zone B Travel Pass is 10.00 USD per day and includes 5 GB of high-speed data, then 256 kbps.
+Without a Travel Pass, Western Europe data is 0.15 USD per MB, voice is 0.29 USD per minute, and text is 0.15 USD per message.
+Business Unlimited pays 5.00 USD per Zone B Travel Pass day. Enterprise Mobile includes Zone B at no daily charge.
+Unlimited Plus does not include Western Europe.
+The United Kingdom is part of Zone B. It is not a separate zone.
+
+Canada or Mexico
+Zone A. Included at no daily charge on Unlimited Plus, Business Unlimited, and Enterprise Mobile.
+Unlimited Essential pays 5.00 USD per day or pay-per-use at 0.05 USD per MB.
+
+8. How to add a Travel Pass
+
+The customer can add a pass in the Prodapt app before the trip or on the first day abroad.
+Support can add it on the account while the customer is traveling. The pass starts the day it is added if the line has already registered abroad that day.
+Passes are not refunded for a day the line already registered on a foreign network.
+A pass bought by mistake for a future date, before any foreign registration, can be removed at no charge.
+
+9. Bill shock and disputes
+
+If pay-per-use roaming posted and the customer says they never turned roaming on, check whether a Travel Pass was active. If it was, the daily fee is valid and the pay-per-use rates should not also have billed for the same data. A double application (Travel Pass day plus pay-per-use for the same megabytes) is a billing error and follows the billing disputes policy.
+A normal Travel Pass fee or a normal pay-per-use charge inside the published rates is not a billing error, even if the total surprises the customer. Offer to enable a Travel Pass and explain the cap. Do not credit published rates as a duplicate.
+
+10. Country index
+
+If a country is not in Zone A, B, or C, it is Zone D. Western Europe means only the Zone B list. A country in geographic Europe that is not on the Zone B list is Zone D.
+
+Zone A, Travel Pass 5.00 USD per day, or included on Unlimited Plus, Business Unlimited, and Enterprise Mobile. Pay-per-use 0.05 USD per MB.
+Canada
+Mexico
+
+Zone B, Travel Pass 10.00 USD per day (5.00 USD on Business Unlimited, included on Enterprise Mobile). Pay-per-use 0.15 USD per MB, voice 0.29 USD per minute, text 0.15 USD.
+Austria
+Belgium
+Denmark
+Finland
+France
+Germany
+Ireland
+Italy
+Luxembourg
+Netherlands
+Norway
+Portugal
+Spain
+Sweden
+Switzerland
+United Kingdom
+
+The United Kingdom, Ireland, France, Germany, Spain, Italy, and the Netherlands are Western Europe. Quote the Zone B rate for each of them. Do not invent a separate United Kingdom rate.
+
+Zone C, Travel Pass 12.00 USD per day, 2 GB high-speed then 256 kbps. Pay-per-use 0.20 USD per MB, voice 0.49 USD per minute, text 0.25 USD. Not included on Unlimited Plus.
+Japan. Partners NTT Docomo, KDDI, and SoftBank. 5G roaming in Tokyo, Osaka, and Kyoto does not change the price.
+South Korea
+Australia
+New Zealand
+
+Zone D examples, Travel Pass 15.00 USD per day with 1 GB high-speed, voice still pay-per-use at 1.99 USD per minute. Data pay-per-use is 2.00 USD per MB. Text is 0.50 USD.
+India
+China
+Brazil
+United Arab Emirates
+Singapore
+Thailand
+South Africa
+Argentina
+Greece
+Poland
+Turkey
+Iceland
+Bahamas
+Any cruise port while the device is on a ship network. See section 12. The ship itself is not a country zone.
+
+Greece, Poland, Turkey, and Iceland are not Western Europe for billing. Do not quote 10.00 USD. Quote Zone D.
+
+11. Which plan pays what, by zone
+
+Unlimited Plus
+Zone A: included, 0.00 USD per day.
+Zone B: 10.00 USD Travel Pass, or pay-per-use.
+Zone C, including Japan: 12.00 USD Travel Pass, or pay-per-use. Not included.
+Zone D: 15.00 USD Travel Pass, or pay-per-use.
+
+Unlimited Essential
+No zone is included. Zone A is 5.00 USD per day. Zones B, C, and D are the full Travel Pass prices above.
+
+Business Unlimited
+Zone A: included.
+Zone B: 5.00 USD per day, half of 10.00 USD.
+Zone C: 12.00 USD per day.
+Zone D: 15.00 USD per day.
+
+Enterprise Mobile
+Zone A and Zone B: included, 0.00 USD per day.
+Zone C: 12.00 USD per day.
+Zone D: 15.00 USD per day.
+Pay-per-use on an Enterprise line still counts toward the 100.00 USD spend cap.
+
+5G Home
+Cannot roam. Do not add a Travel Pass. A 5G Home charge that looks like roaming is a billing error.
+
+12. Ships, flights, and borders
+
+Cruise ships and maritime networks are blocked. Prodapt does not bill a cruise day as Zone A, B, C, or D. If the customer goes ashore and registers on a land partner, the land country zone applies for that day.
+In-flight and satellite roaming are blocked. There is no airline daily rate.
+Driving from the United States into Canada or Mexico is Zone A as soon as the phone registers on the foreign network. Unlimited Plus pays nothing extra for that day.
+A day is billed in the local time zone of the phone, from 00:00 to 23:59. Crossing midnight starts a second Travel Pass day if the phone is still registered abroad.
+
+13. One pass per line
+
+A Travel Pass covers one line, not the whole account. A second line on the same account needs its own pass.
+The pass cannot be shared with a tablet that has its own number.
+High-speed data is 5 GB in Zones A and B, 2 GB in Zone C, and 1 GB in Zone D, then 256 kbps until midnight local time. The allotment does not roll to the next day.
+
+14. Worked price questions
+
+What will data cost in Japan?
+Zone C. Travel Pass 12.00 USD per day with 2 GB of high-speed data, then 256 kbps. Without the pass, 0.20 USD per MB. Unlimited Plus does not include Japan. 500 MB of pay-per-use is 100.00 USD, which hits the default spend cap. Prefer the 12.00 USD pass for a multi-day trip.
+Five Japan Travel Pass days are 60.00 USD if each day is a Zone C pass. That 60.00 USD figure is five times 12.00, not a special weekly product, unless the bill literally says a bundle.
+
+What is the roaming policy for Western Europe?
+Zone B. Travel Pass 10.00 USD per day with 5 GB high-speed, then 256 kbps. Without the pass, data is 0.15 USD per MB and voice is 0.29 USD per minute. Business Unlimited pays 5.00 USD per Zone B day. Enterprise Mobile includes Zone B. Unlimited Plus does not.
+
+What about the United Kingdom, France, or Germany specifically?
+Each is Zone B. Same prices as Western Europe. The United Kingdom did not become its own zone.
+
+What about Canada on Unlimited Plus?
+Included. 0.00 USD. No Travel Pass required.
+
+What about Mexico on Unlimited Essential?
+Not included. 5.00 USD Travel Pass or 0.05 USD per MB.
+
+What about India, Brazil, or Greece?
+Zone D. Travel Pass 15.00 USD per day with 1 GB, or 2.00 USD per MB pay-per-use. Greece is not Zone B.
+
+How fast does pay-per-use hit the 100.00 USD cap?
+Zone A: 2,000 MB at 0.05 USD.
+Zone B: about 667 MB at 0.15 USD.
+Zone C: 500 MB at 0.20 USD.
+Zone D: 50 MB at 2.00 USD.
+Travel Pass fees do not count toward this cap. The customer can raise the cap to 200.00 USD or 500.00 USD in the app after the account PIN is verified. Support may raise it only after that PIN check.
+
+A charge shows both a Travel Pass day and pay-per-use for the same megabytes.
+That is a billing error. Credit only the duplicated portion, using the billing disputes policy. A Travel Pass alone, at the published daily price, is not an error.
+
+A charge is a normal Japan Travel Pass and the customer is unhappy with the total.
+That is not a duplicate and not a misquote. Explain 12.00 USD per day and the cap. Do not credit published rates.
+
+15. Document control
+
+Zone B remains Western Europe at 10.00 USD per Travel Pass day. Zone C, including Japan, remains 12.00 USD per Travel Pass day with 2 GB of high-speed data. The default spend cap remains 100.00 USD per line per billing cycle. Version 3.3 adds no new countries.

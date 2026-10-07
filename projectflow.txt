@@ -1,0 +1,42 @@
+                    CUSTOMER
+                       │
+                       ▼
+                 ┌───────────┐
+                 │ Streamlit │
+                 └─────┬─────┘
+                       │
+                       ▼
+              ┌─────────────────┐
+              │ LangGraph        │
+              │ Supervisor       │
+              └────────┬────────┘
+                       │
+        ┌──────────────┼───────────────┐
+        │              │               │
+        ▼              ▼               ▼
+   DOCUMENT         DATABASE        PROBLEM
+   QUESTION         QUESTION        QUESTION
+        │              │               │
+        ▼              ▼               ▼
+    RAG Agent       SQL Agent      Specialist
+        │              │          ┌────┴────┐
+        ▼              ▼          ▼         ▼
+   LlamaIndex      LlamaIndex  Network   Billing
+        │              │        Agent      Agent
+        ▼              ▼          │         │
+    ChromaDB        SQLite       LangChain LangChain
+        │              │          │         │
+        └──────────────┴──────────┴─────────┘
+                       │
+                       ▼
+                    CrewAI
+                Draft + Review
+                       │
+                       ▼
+                 Final Answer
+                       │
+                       ▼
+                   Streamlit
+                       │
+                       ▼
+                    CUSTOMER

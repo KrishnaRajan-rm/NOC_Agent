@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.py[cod]
+*.db
+*.sqlite3
+rag/chroma_db/
+.venv/
+venv/
+env/
+.pytest_cache/
+.streamlit/secrets.toml

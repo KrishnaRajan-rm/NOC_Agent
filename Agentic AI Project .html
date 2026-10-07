@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prodapt Capstone – Student Project Specification</title>
+  <style>
+    :root {
+      --primary: #1d4ed8;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --surface: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top left, #eef2ff 0, #f9fafb 45%, #fdf2ff 100%);
+      color: #111827;
+    }
+    main {
+      max-width: 1020px;
+      margin: 2rem auto 3rem;
+      padding: 2.5rem 2rem 3.5rem;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 18px 45px rgba(15,23,42,0.08), 0 0 0 1px rgba(148,163,184,0.12);
+    }
+    h1 {
+      font-size: 2.1rem;
+      margin: 0 0 0.5rem;
+      text-align: center;
+      color: #0f172a;
+      padding: 1rem 1.5rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #dbeafe, #e0e7ff, #ede9fe);
+    }
+    .subtitle { text-align: center; color: var(--muted); margin: 0 0 1.75rem; }
+    h2 {
+      font-size: 1.55rem;
+      margin-top: 2.5rem;
+      border-bottom: 2px solid rgba(29,78,216,0.18);
+      padding-bottom: 0.35rem;
+      color: #0f172a;
+    }
+    h3 { font-size: 1.2rem; margin-top: 1.75rem; color: #0f172a; }
+    h4 { font-size: 1.05rem; margin-top: 1.25rem; color: #1e293b; }
+    p { margin: 0.5rem 0 0.85rem; }
+    .note, .warning, .success-box, .scenario-box {
+      padding: 0.95rem 1.15rem;
+      margin: 1rem 0 1.5rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+    .note { border-left: 4px solid var(--primary); background: #eff6ff; }
+    .warning { border-left: 4px solid #ea580c; background: #fff7ed; }
+    .success-box { border-left: 4px solid #16a34a; background: #ecfdf3; }
+    .scenario-box { border-left: 4px solid #7c3aed; background: #faf5ff; }
+    .box-title {
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.78rem;
+    }
+    ol, ul { padding-left: 1.4rem; }
+    li { margin: 0.3rem 0; }
+    .small { font-size: 0.92rem; color: var(--muted); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem;
+      font-size: 0.93rem;
+    }
+    th {
+      background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+      padding: 0.7rem 0.9rem;
+      text-align: left;
+      border-bottom: 2px solid var(--primary);
+    }
+    td {
+      padding: 0.65rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .framework-badge {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .badge-langgraph { background: #dbeafe; color: #1e40af; }
+    .badge-llama { background: #ede9fe; color: #6d28d9; }
+    .badge-adk { background: #dcfce7; color: #166534; }
+    .badge-crew { background: #ffedd5; color: #c2410c; }
+    .badge-streamlit { background: #fce7f3; color: #be185d; }
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.35rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .toc a { color: var(--primary); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .diagram-section {
+      margin: 1.25rem 0 1.75rem;
+      padding: 1.1rem 1.25rem;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .diagram-caption {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 0.75rem;
+      font-style: italic;
+      text-align: center;
+    }
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .step-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      background: #fff;
+    }
+    .step-num {
+      display: inline-block;
+      width: 1.75rem;
+      height: 1.75rem;
+      line-height: 1.75rem;
+      text-align: center;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+    .query-example {
+      background: #0f172a;
+      color: #a5f3fc;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      margin: 0.75rem 0;
+      border-left: 4px solid #22d3ee;
+    }
+    .route-path {
+      background: #f1f5f9;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin: 0.5rem 0;
+    }
+    .file-tree { list-style: none; padding-left: 0; }
+    .file-tree li { padding: 0.2rem 0; }
+    .file-tree .folder { font-weight: 600; color: #1e40af; }
+    .file-tree .provided { color: #166534; }
+    .file-tree .student { color: #9a3412; }
+    hr { border: none; border-top: 1px dashed var(--border); margin: 2.5rem 0; }
+    nav.top-nav {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem;
+    }
+    nav.top-nav a {
+      font-size: 0.82rem; padding: 0.35rem 0.75rem;
+      background: #f1f5f9; border-radius: 999px; color: #334155; text-decoration: none;
+    }
+    nav.top-nav a:hover { background: #dbeafe; color: #1e40af; }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+    @media (max-width: 720px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-card {
+      border-radius: 10px;
+      padding: 1rem 1.15rem;
+      border: 1px solid var(--border);
+    }
+    .compare-card.before { background: #fef2f2; border-color: #fecaca; }
+    .compare-card.after  { background: #ecfdf3; border-color: #bbf7d0; }
+    .compare-card h4 { margin-top: 0; }
+    .persona-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 0.75rem 0;
+      background: #fff;
+    }
+    .persona-card strong { color: #1e40af; }
+  </style>
+</head>
+<body>
+<main>
+
+  <h1>Prodapt — Capstone Project Specification</h1>
+  <p class="subtitle">Multi-Framework Agentic AI · LangGraph · LlamaIndex · Google ADK · CrewAI · Streamlit</p>
+
+  <div class="note">
+    <div class="box-title">What I have provided for you</div>
+    <p class="small">
+      This folder contains <strong>only starter assets</strong>: policy documents (TXT), SQL scripts, and this
+      specification HTML. <strong>You must implement everything else</strong> — Python modules, agents, orchestration,
+      and the Streamlit UI — following the instructions below. Refer to your course labs for framework patterns.
+    </p>
+  </div>
+
+  <nav class="top-nav">
+    <a href="#business">Business Use Case</a>
+    <a href="#overview">Overview</a>
+    <a href="#provided">Provided Assets</a>
+    <a href="#structure">Your Project Structure</a>
+    <a href="#database">Database Rules</a>
+    <a href="#components">What to Build</a>
+    <a href="#setup">Setup Steps</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#scenarios">Scenarios &amp; Diagrams</a>
+    <a href="#practice">Practice Queries</a>
+    <a href="#evaluation">Evaluation</a>
+  </nav>
+
+  <!-- 1 BUSINESS USE CASE -->
+  <h2 id="business">1. Business Use Case — Why Agentic AI?</h2>
+
+  <h3>1.1 The Company</h3>
+  <p>
+    <strong>Prodapt</strong> is a mid-size telecom provider offering mobile voice, 4G LTE, and 5G data
+    services across the United States. It serves consumer, business, and enterprise customers. Like every telecom
+    operator, Prodapt receives thousands of inquiries daily about network problems, billing disputes, roaming,
+    device upgrades, and service-level agreements (SLAs).
+  </p>
+  <p>
+    Today, these inquiries are handled by separate teams using separate tools. Your capstone project automates
+    this fragmented workflow using a <strong>multi-agent AI Operations Center</strong>.
+  </p>
+
+  <h3>1.2 Who Uses the System?</h3>
+  <div class="persona-card">
+    <strong>Customer Support Agent (primary user)</strong><br />
+    Front-line staff who receive customer calls and chats. They need fast, accurate answers and often must
+    coordinate between policy documents, network data, and billing systems — usually while the customer waits on hold.
+  </div>
+  <div class="persona-card">
+    <strong>Network Operations (NOC) staff</strong><br />
+    Engineers who monitor tower status, diagnose connectivity issues, and manage open incidents. Their expertise
+    is technical; customer-facing explanations require a different tone.
+  </div>
+  <div class="persona-card">
+    <strong>Billing Resolution team</strong><br />
+    Specialists who investigate duplicate charges, apply credits, and follow dispute policy. Actions must comply
+    with credit limits and leave an audit trail in the billing database.
+  </div>
+  <div class="persona-card">
+    <strong>End customer (indirect beneficiary)</strong><br />
+    Subscribers who expect one answer — not three transfers — when they ask: <em>"My 5G keeps dropping and I was
+    charged twice — am I owed a credit?"</em>
+  </div>
+
+  <h3>1.3 The Existing Problem (As-Is — Manual Operations)</h3>
+  <p>
+    Before automation, a single customer inquiry can touch <strong>four disconnected systems</strong> and
+    <strong>three different teams</strong>. There is no intelligent routing — humans decide where to look.
+  </p>
+
+  <div class="compare-grid">
+    <div class="compare-card before">
+      <h4>Today's pain points</h4>
+      <ul class="small">
+        <li><strong>Fragmented knowledge</strong> — Policies live in PDF/TXT documents; outage and tower data live in SQL databases; live diagnostics sit in NOC dashboards; billing data sits in a separate CRM/billing system.</li>
+        <li><strong>Slow resolution</strong> — An agent puts the customer on hold, searches policy folders, emails NOC, waits for a billing supervisor, then manually drafts a reply. Average handle time: 15–25 minutes for complex cases.</li>
+        <li><strong>Inconsistent answers</strong> — Two agents may interpret the roaming policy or SLA credit rules differently because answers are not grounded in the same source documents.</li>
+        <li><strong>Wrong-team routing</strong> — Billing agents cannot diagnose tower issues; NOC engineers should not apply credits. Customers get transferred multiple times.</li>
+        <li><strong>Multi-domain questions fail</strong> — Questions like <em>"We had a 6-hour Midwest outage — am I eligible for SLA credit?"</em> require both operational data <em>and</em> policy interpretation. No single tool handles both.</li>
+        <li><strong>High training cost</strong> — New hires need weeks to learn which system to use for which question type.</li>
+        <li><strong>No audit trail</strong> — It is hard to prove which data sources and policies were consulted when a credit was applied or a diagnosis was given.</li>
+      </ul>
+    </div>
+    <div class="compare-card after">
+      <h4>What the business needs</h4>
+      <ul class="small">
+        <li>One entry point where staff (or customers) ask a question in plain English</li>
+        <li>Automatic routing to the right specialist — policy, analytics, network, or billing</li>
+        <li>Answers grounded in actual policy documents and live database records</li>
+        <li>Actionable outcomes — diagnostics run, credits applied — with data persisted in SQL</li>
+        <li>Professional, consistent customer-ready responses every time</li>
+        <li>Visibility into which agents ran and what they found (execution trace)</li>
+        <li>Ability to scale specialist services independently (network vs billing microservices)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>Example: How a billing dispute works today (manual)</h4>
+  <div class="diagram-section">
+    <div class="mermaid">
+flowchart TD
+  C[Customer calls: charged twice for Unlimited Plus] --> A1[Support Agent]
+  A1 -->|puts customer on hold| B1[Search billing CRM manually]
+  B1 --> A1
+  A1 -->|transfer| B2[Billing Team]
+  B2 -->|checks charges| B3[Spreadsheet / CRM lookup]
+  B3 --> B2
+  B2 -->|reads policy PDF| B4[Find credit limit rules]
+  B4 --> B2
+  B2 -->|applies credit manually| B5[Update billing system]
+  B5 --> A1
+  A1 -->|writes email from scratch| C2[Customer receives reply 20+ min later]
+    </div>
+    <p class="diagram-caption">Figure A — As-Is: manual, multi-team, no intelligent orchestration.</p>
+  </div>
+
+  <h3>1.4 The Expected Solution (To-Be — Agentic AI Operations Center)</h3>
+  <p>
+    You will build an <strong>AI Operations Center</strong> that acts as an intelligent front door. A
+    <strong>LangGraph supervisor</strong> understands the intent of each inquiry and delegates to specialist
+    workers — each powered by the right framework for that job. The result is a single, coherent,
+    customer-ready response.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Business Need</th><th>Your Solution Component</th><th>What It Automates</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Answer policy &amp; FAQ questions instantly</td>
+        <td>LlamaIndex Document RAG</td>
+        <td>Replaces manual PDF/TXT search. Retrieves relevant policy chunks and synthesizes an answer from sla_policy.txt, roaming_policy.txt, etc.</td>
+      </tr>
+      <tr>
+        <td>Query operational data without writing SQL</td>
+        <td>LlamaIndex Semantic SQL</td>
+        <td>Replaces BI analyst or manual SQL. Automatically finds the right table (outages, towers, performance) and answers analytics questions.</td>
+      </tr>
+      <tr>
+        <td>Diagnose live network / tower issues</td>
+        <td>Google ADK Network Diagnostics (A2A)</td>
+        <td>Replaces NOC ticket lookup. Agent tools query tower status, performance, and open incidents from SQL and return diagnostic recommendations.</td>
+      </tr>
+      <tr>
+        <td>Investigate billing disputes and apply credits</td>
+        <td>Google ADK Billing Resolution (A2A)</td>
+        <td>Replaces billing team manual lookup. Agent tools read charges from SQL, detect duplicates, insert credits, update account balance.</td>
+      </tr>
+      <tr>
+        <td>Decide which specialist handles each step</td>
+        <td>LangGraph Supervisor</td>
+        <td>Replaces human judgment about routing. LLM supervisor reads conversation and picks the next worker or FINISH.</td>
+      </tr>
+      <tr>
+        <td>Deliver professional customer communication</td>
+        <td>CrewAI Communications Crew</td>
+        <td>Replaces agent manually drafting emails. Specialist drafts + reviewer approves tone, accuracy, and compliance.</td>
+      </tr>
+      <tr>
+        <td>Single interface for staff</td>
+        <td>Streamlit UI</td>
+        <td>Replaces switching between CRM, NOC dashboard, policy folder, and email client.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Example: Same billing dispute with your agentic solution</h4>
+  <div class="diagram-section">
+    <div class="mermaid">
+flowchart TD
+  C[Staff enters: CUST-10002 charged twice] --> UI[Streamlit UI]
+  UI --> SUP[LangGraph Supervisor]
+  SUP -->|billing intent| BR[BillingResolutionADK]
+  BR -->|A2A HTTP| ADK[Billing ADK Agent port 8002]
+  ADK -->|SQL| DB[(telecom_ops.db)]
+  DB --> ADK
+  ADK --> BR
+  BR --> SUP
+  SUP --> CREW[CrewAI Customer Comms]
+  CREW --> SUP
+  SUP --> UI
+  UI --> OUT[Credit applied + professional customer letter + execution trace]
+    </div>
+    <p class="diagram-caption">Figure B — To-Be: one query, automated routing, SQL-backed actions, polished response.</p>
+  </div>
+
+  <h3>1.5 Problems This Use Case Solves</h3>
+  <table>
+    <thead>
+      <tr><th>Business Problem</th><th>How Your Agentic System Solves It</th><th>Measurable Benefit</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Knowledge silos across documents, SQL, NOC, and billing</td>
+        <td>Supervisor orchestrates LlamaIndex RAG, semantic SQL, and ADK agents from one entry point</td>
+        <td>One query instead of four systems</td>
+      </tr>
+      <tr>
+        <td>Slow average handle time on complex cases</td>
+        <td>Specialists run in sequence automatically; no hold time between teams</td>
+        <td>Minutes instead of 15–25 minutes</td>
+      </tr>
+      <tr>
+        <td>Inconsistent policy interpretation</td>
+        <td>RAG answers grounded in provided policy TXT files; billing follows billing_disputes_policy.txt rules</td>
+        <td>Same source documents every time</td>
+      </tr>
+      <tr>
+        <td>Wrong team / wrong tool selection</td>
+        <td>Supervisor routing matrix maps intent to PolicyRAG, NetworkAnalytics, NetworkDiagnosticsADK, or BillingResolutionADK</td>
+        <td>Correct specialist on first routing decision</td>
+      </tr>
+      <tr>
+        <td>Multi-domain questions (outage + SLA, billing + policy)</td>
+        <td>Supervisor chains multiple workers; CrewAI merges all context into one response</td>
+        <td>Scenario 5 — combined flow handled end-to-end</td>
+      </tr>
+      <tr>
+        <td>Long onboarding for new support staff</td>
+        <td>System knows which framework and data source to use; staff only need to ask the question</td>
+        <td>Reduced training dependency on tribal knowledge</td>
+      </tr>
+      <tr>
+        <td>No audit trail for decisions</td>
+        <td>Streamlit execution trace shows every worker, ADK tool call outcome, and final CrewAI response</td>
+        <td>Transparent, reviewable agent steps</td>
+      </tr>
+      <tr>
+        <td>Monolithic agent hard to maintain</td>
+        <td>ADK specialists exposed via A2A as independent microservices; LangGraph consumes them remotely</td>
+        <td>Network and billing teams can deploy/update agents independently</td>
+      </tr>
+      <tr>
+        <td>Technical answers sent directly to customers</td>
+        <td>CrewAI crew always polishes the final response for tone, empathy, and compliance</td>
+        <td>Professional customer-ready communication</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="success-box">
+    <div class="box-title">Business value summary</div>
+    <p class="small">
+      Prodapt's AI Operations Center does not replace humans entirely — it <strong>automates the coordination,
+      retrieval, and first-line resolution</strong> that today consumes most of an agent's time. Humans remain in
+      the loop for approvals (e.g., credits over $50 per policy), escalations, and quality review — but the
+      agentic system eliminates the friction of finding the right information in the right system at the right time.
+    </p>
+  </div>
+
+  <h3>1.6 Real Inquiry Types You Must Support</h3>
+  <p>Your implementation must handle the same categories Prodapt staff see every day:</p>
+  <table>
+    <thead><tr><th>Inquiry Category</th><th>Real-World Example</th><th>Primary Automation</th></tr></thead>
+    <tbody>
+      <tr><td>Roaming &amp; international travel</td><td>"I'm traveling to Japan — what will data cost?"</td><td>PolicyRAG → CrewAI</td></tr>
+      <tr><td>SLA &amp; outage credits</td><td>"Outage lasted 6 hours — do I get a credit?"</td><td>NetworkAnalytics + PolicyRAG → CrewAI</td></tr>
+      <tr><td>5G troubleshooting</td><td>"5G drops near tower TX-512 in Austin"</td><td>NetworkDiagnosticsADK → CrewAI</td></tr>
+      <tr><td>Billing disputes</td><td>"CUST-10002 charged twice for Unlimited Plus"</td><td>BillingResolutionADK → CrewAI</td></tr>
+      <tr><td>Network performance analytics</td><td>"Which towers have the highest packet loss?"</td><td>NetworkAnalytics → CrewAI</td></tr>
+      <tr><td>Device upgrade eligibility</td><td>"Can I trade in my iPhone 13?"</td><td>PolicyRAG → CrewAI</td></tr>
+    </tbody>
+  </table>
+
+  <hr />
+
+  <!-- 2 OVERVIEW -->
+  <h2 id="overview">2. Project Overview</h2>
+  <p>
+    Build <strong>Prodapt AI Operations Center</strong> — an intelligent assistant for a fictional
+    telecom provider. Customers and staff submit inquiries through a <strong>Streamlit</strong> UI. A
+    <strong>LangGraph supervisor</strong> routes each request to the correct specialist worker.
+  </p>
+
+  <h3>2.1 What You Must Demonstrate</h3>
+  <table>
+    <thead><tr><th>Capability</th><th>Framework</th><th>Example Question</th></tr></thead>
+    <tbody>
+      <tr><td>Policy &amp; FAQ answers</td><td><span class="framework-badge badge-llama">LlamaIndex RAG</span></td><td>What is the roaming policy for Europe?</td></tr>
+      <tr><td>Network analytics from SQL</td><td><span class="framework-badge badge-llama">LlamaIndex Semantic SQL</span></td><td>Which region had the most CRITICAL outages?</td></tr>
+      <tr><td>Live network diagnostics</td><td><span class="framework-badge badge-adk">Google ADK + A2A</span></td><td>My 5G drops near tower TX-512 in Austin</td></tr>
+      <tr><td>Billing dispute resolution</td><td><span class="framework-badge badge-adk">Google ADK + A2A</span></td><td>Customer CUST-10002 was charged twice</td></tr>
+      <tr><td>Customer-ready responses</td><td><span class="framework-badge badge-crew">CrewAI</span></td><td>Final step for all customer-facing flows</td></tr>
+      <tr><td>Multi-agent routing</td><td><span class="framework-badge badge-langgraph">LangGraph</span></td><td>Supervisor decides which worker runs next</td></tr>
+      <tr><td>User interface</td><td><span class="framework-badge badge-streamlit">Streamlit</span></td><td>Query input, results, agent execution trace</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warning">
+    <div class="box-title">Critical rules</div>
+    <ul class="small">
+      <li><strong>LlamaIndex:</strong> Use only for RAG and semantic SQL retrieval. Do <strong>not</strong> use LlamaIndex agents.</li>
+      <li><strong>No in-memory dictionaries:</strong> All operational data (towers, outages, billing, incidents) must be read from and written to the <strong>SQLite database</strong> created from the provided SQL scripts. ADK agent tools must execute SQL queries — never hard-code Python dicts for business data.</li>
+      <li><strong>ADK agents</strong> run as separate A2A HTTP services; LangGraph consumes them via RemoteA2aAgent.</li>
+    </ul>
+  </div>
+
+  <h3>2.2 Learning Objectives</h3>
+  <ol>
+    <li>Build document RAG with LlamaIndex VectorStoreIndex over the provided TXT policy files</li>
+    <li>Implement semantic SQL table retrieval using LlamaIndex ObjectIndex and SQLTableRetrieverQueryEngine</li>
+    <li>Expose Google ADK agents over the A2A protocol on separate ports</li>
+    <li>Consume remote ADK agents from LangGraph nodes using RemoteA2aAgent</li>
+    <li>Integrate a CrewAI sequential crew as a LangGraph worker node</li>
+    <li>Design a LangGraph supervisor with conditional routing and shared state</li>
+    <li>Deliver a Streamlit UI with agent execution trace</li>
+    <li>Implement all ADK tools against SQL tables — no in-memory data stores</li>
+  </ol>
+
+  <hr />
+
+  <!-- 2 PROVIDED -->
+  <h2 id="provided">3. Provided Starter Assets</h2>
+  <p>I have provided you with the following files only. Do not modify the policy documents unless an extension task asks you to add new ones.</p>
+
+  <h3>3.1 Policy Documents (RAG source)</h3>
+  <p>Location: <strong>data/documents/</strong></p>
+  <table>
+    <thead><tr><th>File</th><th>Contents</th><th>Typical Questions</th></tr></thead>
+    <tbody>
+      <tr><td>sla_policy.txt</td><td>Uptime guarantees, outage credits, MTTR targets</td><td>Am I eligible for SLA credit after a 6-hour outage?</td></tr>
+      <tr><td>roaming_policy.txt</td><td>Zones A–D, Travel Pass, spend caps</td><td>What does roaming cost in Japan?</td></tr>
+      <tr><td>billing_disputes_policy.txt</td><td>Dispute window, credit limits, escalation</td><td>How long do I have to dispute a charge?</td></tr>
+      <tr><td>network_outage_procedures.txt</td><td>Incident classification, NOC procedures</td><td>What defines a CRITICAL outage?</td></tr>
+      <tr><td>5g_faq.txt</td><td>5G coverage, troubleshooting, device compatibility</td><td>Why is my 5G slow indoors?</td></tr>
+      <tr><td>device_upgrade_policy.txt</td><td>Trade-in values, early upgrade, installments</td><td>Can I upgrade my iPhone 13?</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 SQL Scripts</h3>
+  <p>Location: <strong>sql/</strong></p>
+  <table>
+    <thead><tr><th>File</th><th>Purpose</th><th>When to Run</th></tr></thead>
+    <tbody>
+      <tr><td>01_schema.sql</td><td>Creates all tables (network, billing, incidents, performance)</td><td>First — before any seed data</td></tr>
+      <tr><td>02_seed_data.sql</td><td>Inserts sample towers, outages, subscriptions, billing charges, open incidents</td><td>Second — after schema</td></tr>
+    </tbody>
+  </table>
+  <p>
+    After running both scripts, you will have a SQLite database (recommended path: <strong>data/telecom_ops.db</strong>).
+    All LlamaIndex semantic SQL queries and all ADK agent tools must use this database.
+  </p>
+
+  <hr />
+
+  <!-- 3 STRUCTURE -->
+  <h2 id="structure">4. Project Directory Structure (You Create This)</h2>
+  <p>
+    Create a new project folder (or use the capstone folder and add your implementation alongside the provided assets).
+    The tree below shows what is <span style="color:#166534;font-weight:600">provided</span> vs what
+    <span style="color:#9a3412;font-weight:600">you must create</span>.
+  </p>
+
+  <ul class="file-tree">
+    <li class="folder">capstone-project/</li>
+    <li>&nbsp;&nbsp;├── <span class="provided">capstone-project-specification.html</span> &nbsp;(provided)</li>
+    <li>&nbsp;&nbsp;├── <span class="provided">data/documents/*.txt</span> &nbsp;(6 policy files — provided)</li>
+    <li>&nbsp;&nbsp;├── <span class="provided">sql/01_schema.sql</span> &nbsp;(provided)</li>
+    <li>&nbsp;&nbsp;├── <span class="provided">sql/02_seed_data.sql</span> &nbsp;(provided)</li>
+    <li>&nbsp;&nbsp;├── <span class="student">data/telecom_ops.db</span> &nbsp;(you create by running SQL scripts)</li>
+    <li>&nbsp;&nbsp;├── <span class="student">data/vector_index/</span> &nbsp;(you create — persisted LlamaIndex embeddings)</li>
+    <li>&nbsp;&nbsp;├── <span class="student">requirements.txt</span></li>
+    <li>&nbsp;&nbsp;├── <span class="student">.env</span> &nbsp;(API keys — never commit to git)</li>
+    <li>&nbsp;&nbsp;├── <span class="folder">llamaindex_rag/</span></li>
+    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="student">document_rag.py</span> &nbsp;— Vector RAG over policy TXT files</li>
+    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="student">sql_semantic_search.py</span> &nbsp;— ObjectIndex + SQL query engine</li>
+    <li>&nbsp;&nbsp;├── <span class="folder">adk-services/</span></li>
+    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="folder">network_diagnostics/</span></li>
+    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="student">agent.py</span> &nbsp;— ADK agent, A2A port 8001, SQL-backed tools</li>
+    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="folder">billing_resolution/</span></li>
+    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="student">agent.py</span> &nbsp;— ADK agent, A2A port 8002, SQL-backed tools</li>
+    <li>&nbsp;&nbsp;├── <span class="folder">orchestration/</span></li>
+    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="student">state.py</span> &nbsp;— LangGraph AgentState definition</li>
+    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="student">graph.py</span> &nbsp;— Supervisor + all worker nodes + graph compile</li>
+    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="student">adk_remote_client.py</span> &nbsp;— RemoteA2aAgent wrapper for LangGraph</li>
+    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="student">crew_nodes.py</span> &nbsp;— CrewAI customer communications crew</li>
+    <li>&nbsp;&nbsp;└── <span class="folder">ui/</span></li>
+    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="student">app.py</span> &nbsp;— Streamlit application</li>
+  </ul>
+
+  <hr />
+
+  <!-- 4 DATABASE -->
+  <h2 id="database">5. Database Design &amp; Usage Rules</h2>
+
+  <div class="warning">
+    <div class="box-title">No in-memory dictionaries</div>
+    <p class="small">
+      Do <strong>not</strong> store tower status, billing accounts, charges, or incidents in Python dictionaries,
+      lists, or global variables. Every ADK tool must <strong>query or update SQLite</strong>. This mirrors real
+      production systems where agents interact with persistent data stores.
+    </p>
+  </div>
+
+  <h3>5.1 Tables Provided in 01_schema.sql</h3>
+  <table>
+    <thead><tr><th>Table</th><th>Used By</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>network_towers</td><td>LlamaIndex SQL, Network Diagnostics ADK</td><td>Tower inventory: region, city, technology, status</td></tr>
+      <tr><td>network_outages</td><td>LlamaIndex SQL</td><td>Historical outage records with severity and root cause</td></tr>
+      <tr><td>tower_performance</td><td>LlamaIndex SQL, Network Diagnostics ADK</td><td>Latency, packet loss, throughput, signal strength</td></tr>
+      <tr><td>open_incidents</td><td>Network Diagnostics ADK</td><td>Active NOC incidents linked to towers</td></tr>
+      <tr><td>customer_subscriptions</td><td>LlamaIndex SQL</td><td>Plan names, fees, account types by region</td></tr>
+      <tr><td>billing_accounts</td><td>Billing Resolution ADK</td><td>Current balance per customer</td></tr>
+      <tr><td>billing_charges</td><td>Billing Resolution ADK</td><td>Line items on bills; duplicate flag column for disputes</td></tr>
+      <tr><td>billing_credits</td><td>Billing Resolution ADK</td><td>Applied or pending credits (insert on credit approval)</td></tr>
+      <tr><td>billing_disputes</td><td>Billing Resolution ADK</td><td>Open and resolved dispute records</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.2 How Each Component Uses the Database</h3>
+  <table>
+    <thead><tr><th>Component</th><th>Database Interaction</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>LlamaIndex Semantic SQL</td>
+        <td>Connect via SQLDatabase wrapper. ObjectIndex selects relevant tables; query engine generates and runs SQL. Read-only for analytics scenarios.</td>
+      </tr>
+      <tr>
+        <td>Network Diagnostics ADK tools</td>
+        <td>
+          <strong>check_tower_status</strong> — JOIN network_towers with the latest tower_performance row (maximum recorded_at for that tower, not an average of the week) and open_incidents.<br />
+          <strong>run_connectivity_diagnostics</strong> — Read tower status and performance; return recommendations based on SQL results.<br />
+          <strong>get_regional_network_summary</strong> — Aggregate tower counts and statuses by region from SQL.
+        </td>
+      </tr>
+      <tr>
+        <td>Billing Resolution ADK tools</td>
+        <td>
+          <strong>lookup_billing_account</strong> — SELECT from billing_accounts and the customer's charges. current_balance matches invoice_status = 'OPEN'. Rows with invoice_status = 'PAID' are prior months and are not added into the balance again.<br />
+          <strong>check_duplicate_charges</strong> — same customer, same description, and same billing period, or is_duplicate_flag = 1. The same plan name in an earlier month is not a duplicate. Skip a charge that already has an APPLIED credit.<br />
+          <strong>apply_billing_credit</strong> — INSERT into billing_credits. If the amount is 50.00 USD or less, status is APPLIED and current_balance is reduced. If the amount is over 50.00 USD, status is PENDING_APPROVAL and current_balance is left unchanged.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>5.3 Semantic SQL Table Context Strings</h3>
+  <p>
+    When building the LlamaIndex ObjectIndex, write a human-readable context description for each table so the
+    embedding model can semantically match user questions to the right table. Example intent (you write the actual
+    strings in your implementation):
+  </p>
+  <ul>
+    <li><strong>network_outages</strong> — describe outage severity, affected customers, incident IDs</li>
+    <li><strong>network_towers</strong> — describe tower locations, technology, operational status</li>
+    <li><strong>tower_performance</strong> — describe latency, packet loss, throughput metrics</li>
+    <li><strong>customer_subscriptions</strong> — describe plans, fees, account types</li>
+  </ul>
+
+  <hr />
+
+  <!-- 5 COMPONENTS -->
+  <h2 id="components">6. Detailed Build Instructions (No Code — Design Only)</h2>
+
+  <h3>6.1 LlamaIndex Document RAG (document_rag.py)</h3>
+  <ol>
+    <li>Configure a local embedding model (HuggingFace all-MiniLM-L6-v2 is recommended from your lab).</li>
+    <li>Load all TXT files from data/documents/ using SimpleDirectoryReader.</li>
+    <li>Build a VectorStoreIndex and persist embeddings to data/vector_index/ so rebuilds are not required every run.</li>
+    <li>Expose a single function that accepts a natural language question and returns a string answer.</li>
+    <li>Use as_query_engine — not LlamaIndex agents, workflows, or ReAct patterns.</li>
+  </ol>
+
+  <h3>6.2 LlamaIndex Semantic SQL (sql_semantic_search.py)</h3>
+  <ol>
+    <li>Connect to data/telecom_ops.db using the LlamaIndex SQLDatabase wrapper.</li>
+    <li>Create SQLTableNodeMapping for all tables in the schema.</li>
+    <li>Define SQLTableSchema objects with context strings for semantic table selection.</li>
+    <li>Build ObjectIndex over table schemas using VectorStoreIndex.</li>
+    <li>Create SQLTableRetrieverQueryEngine with similarity_top_k of 1 or 2.</li>
+    <li>Expose a single function that accepts a question and returns the synthesized answer.</li>
+  </ol>
+
+  <h3>6.3 Network Diagnostics ADK Service (port 8001)</h3>
+  <ol>
+    <li>Create a Google ADK Agent with a clear instruction describing NOC diagnostics responsibilities.</li>
+    <li>Implement three async tools — each tool opens a SQLite connection and runs SQL:
+      <ul>
+        <li>check_tower_status(tower_id) — returns status, technology, signal metrics, any open incident</li>
+        <li>run_connectivity_diagnostics(tower_id, symptom) — reads tower data from SQL, returns recommendations</li>
+        <li>get_regional_network_summary(region) — aggregates tower health for a region from SQL</li>
+      </ul>
+    </li>
+    <li>Wrap the agent with to_a2a and run with uvicorn on port 8001.</li>
+    <li>Verify the agent card is published at localhost:8001/.well-known/agent-card.json</li>
+  </ol>
+
+  <h3>6.4 Billing Resolution ADK Service (port 8002)</h3>
+  <ol>
+    <li>Create a Google ADK Agent for billing dispute resolution.</li>
+    <li>Implement three async tools — all SQL-backed:
+      <ul>
+        <li>lookup_billing_account(customer_id) — balance and recent charges from SQL</li>
+        <li>check_duplicate_charges(customer_id) — find flagged duplicates in billing_charges</li>
+        <li>apply_billing_credit(customer_id, amount, reason) — INSERT credit row, UPDATE account balance; use PENDING_APPROVAL in SQL when amount exceeds policy auto-approval limit ($50 per billing_disputes_policy.txt)</li>
+      </ul>
+    </li>
+    <li>Expose via to_a2a on port 8002.</li>
+  </ol>
+
+  <h3>6.5 LangGraph Remote ADK Client (adk_remote_client.py)</h3>
+  <ol>
+    <li>Create RemoteA2aAgent instances pointing to each agent card URL.</li>
+    <li>Wrap each remote agent in a lightweight proxy ADK Agent with the remote as sub_agent.</li>
+    <li>Use ADK Runner.run_async to send messages and collect final responses.</li>
+    <li>Expose synchronous wrapper functions for use inside LangGraph nodes (Network Diagnostics and Billing Resolution).</li>
+    <li>Handle service-unavailable errors gracefully with a clear message if ports 8001/8002 are not running.</li>
+  </ol>
+
+  <h3>6.6 CrewAI Customer Communications (crew_nodes.py)</h3>
+  <ol>
+    <li>Create a two-agent sequential crew:
+      <ul>
+        <li>Communications Specialist — drafts response using original query + accumulated agent_context from prior workers</li>
+        <li>Quality Reviewer — reviews for accuracy, tone, and policy compliance; outputs final text only</li>
+      </ul>
+    </li>
+    <li>Use Process.sequential. Reviewer task depends on drafter task output.</li>
+    <li>Expose one function: accepts user query and context string, returns final customer-ready response.</li>
+  </ol>
+
+  <h3>6.7 LangGraph Orchestration (graph.py + state.py)</h3>
+  <p><strong>State (AgentState)</strong> must include:</p>
+  <ul>
+    <li>messages — conversation history (append-only across nodes)</li>
+    <li>next — supervisor routing decision</li>
+    <li>user_query — original question</li>
+    <li>agent_context — accumulated outputs from all workers (passed to CrewAI)</li>
+  </ul>
+  <p><strong>Worker nodes</strong> to implement:</p>
+  <table>
+    <thead><tr><th>Node Name</th><th>Action</th><th>Returns To</th></tr></thead>
+    <tbody>
+      <tr><td>supervisor</td><td>LLM with structured output picks next worker or FINISH</td><td>Conditional edge to worker or END</td></tr>
+      <tr><td>policy_rag</td><td>Calls LlamaIndex document RAG</td><td>supervisor</td></tr>
+      <tr><td>network_analytics</td><td>Calls LlamaIndex semantic SQL</td><td>supervisor</td></tr>
+      <tr><td>network_diagnostics_adk</td><td>Calls remote ADK via adk_remote_client</td><td>supervisor</td></tr>
+      <tr><td>billing_resolution_adk</td><td>Calls remote ADK via adk_remote_client</td><td>supervisor</td></tr>
+      <tr><td>customer_comms_crew</td><td>Calls CrewAI crew with full agent_context</td><td>supervisor</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Every worker node updates agent_context with its output before returning to the supervisor.
+    The supervisor routes to CustomerCommsCrew last (before FINISH) for all customer-facing flows.
+  </p>
+
+  <h3 id="streamlit-ui">6.8 Streamlit UI (ui/app.py)</h3>
+  <p>
+    The Streamlit app is the single entry point for staff and demo evaluators. It must make the
+    multi-agent orchestration <strong>visible</strong> — especially which workers ran and what each
+    specialist returned before CrewAI polished the final answer.
+  </p>
+
+  <h4>6.8.1 Page layout</h4>
+  <table>
+    <thead><tr><th>Area</th><th>Required elements</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Main content</strong></td>
+        <td>
+          Page title (e.g. <em>Prodapt AI Operations Center</em>); brief caption naming the frameworks
+          (LangGraph, LlamaIndex, Google ADK, CrewAI); customer inquiry text area; primary Submit button;
+          final customer response; Agent Execution Trace panel (see 6.8.3)
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Sidebar</strong></td>
+        <td>
+          System status indicators; framework map (which capability uses which framework).
+          <strong>Do not</strong> require sample-query buttons or preset query shortcuts in the sidebar —
+          students type or paste inquiries in the main text area for demos.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>6.8.2 Sidebar — system status &amp; framework map</h4>
+  <p>The sidebar must help users know whether the system is ready before submitting a query:</p>
+  <ul>
+    <li><strong>Database status</strong> — indicate whether <code>data/telecom_ops.db</code> exists (e.g. Ready / Run init_db.py)</li>
+    <li><strong>Vector index status</strong> — indicate whether <code>data/vector_index/</code> is built, or note that first RAG query will build it</li>
+    <li><strong>ADK service status</strong> — live check (HTTP) for Network Diagnostics on port <strong>8001</strong> and Billing Resolution on port <strong>8002</strong>; show Running or Not running</li>
+    <li><strong>ADK reminder</strong> — if either ADK service is down, show a short warning with the commands to start both <code>agent.py</code> services</li>
+    <li><strong>Framework map</strong> — a compact table or list mapping capability → framework (Policy FAQ → LlamaIndex RAG; analytics → Semantic SQL; diagnostics/billing → ADK A2A; orchestration → LangGraph; final comms → CrewAI)</li>
+  </ul>
+
+  <h4>6.8.3 Main area — inquiry, response &amp; Agent Execution Trace</h4>
+  <div class="note">
+    <div class="box-title">Required — Agent Execution Trace</div>
+    <p class="small">
+      This is a <strong>mandatory</strong> demo and evaluation feature. Evaluators use it to verify
+      correct routing (PolicyRAG vs NetworkAnalytics vs ADK workers vs CustomerCommsCrew) without
+      reading server logs.
+    </p>
+  </div>
+  <ol>
+    <li><strong>Customer inquiry input</strong> — multi-line text area; placeholder text inviting plain-English questions; bound to session state if you use programmatic updates elsewhere</li>
+    <li><strong>Submit button</strong> — invokes your graph entry function (e.g. <code>run_telecom_assistant(user_query)</code>); show a spinner while the graph runs</li>
+    <li><strong>Final customer response</strong> — display <code>final_response</code> prominently (e.g. success/info box) after the run completes; this is the CrewAI-polished text shown to the customer</li>
+    <li><strong>Agent Execution Trace</strong> — an expander (recommended: <strong>expanded by default</strong> on results) that lists every worker executed in order. For each step show:
+      <ul>
+        <li><strong>Step number</strong> (1, 2, 3, …)</li>
+        <li><strong>Worker name</strong> exactly as in LangGraph (<code>PolicyRAG</code>, <code>NetworkAnalytics</code>, <code>NetworkDiagnosticsADK</code>, <code>BillingResolutionADK</code>, <code>CustomerCommsCrew</code>)</li>
+        <li><strong>Truncated worker output</strong> — the text that worker contributed to <code>agent_context</code> (truncate long outputs for readability, e.g. first 500 characters)</li>
+      </ul>
+    </li>
+    <li><strong>Empty trace handling</strong> — if no workers ran, show a clear message inside the trace panel</li>
+    <li><strong>Error handling</strong> — if the graph throws, show <code>st.error</code> with the message; do not leave the UI in an ambiguous state</li>
+  </ol>
+
+  <h4>6.8.4 Data contract (LangGraph → Streamlit)</h4>
+  <p>Your graph entry function should return a dict the UI can render without parsing messages manually:</p>
+  <table>
+    <thead><tr><th>Key</th><th>Type</th><th>UI use</th></tr></thead>
+    <tbody>
+      <tr><td><code>final_response</code></td><td>str</td><td>Main customer-facing answer (from CustomerCommsCrew)</td></tr>
+      <tr><td><code>execution_trace</code></td><td>list of dicts</td><td>Agent Execution Trace panel; each item: <code>{"worker": "&lt;name&gt;", "output": "&lt;truncated text&gt;"}</code></td></tr>
+      <tr><td><code>agent_context</code></td><td>str (optional)</td><td>May be shown in a secondary debug expander for me to review; not required for minimum spec</td></tr>
+    </tbody>
+  </table>
+  <p>Populate <code>execution_trace</code> inside each LangGraph worker node when the worker completes — append one entry per worker invocation, in execution order.</p>
+
+  <h4>6.8.5 Example trace (Scenario 4 — billing dispute)</h4>
+  <div class="scenario-box">
+    <div class="box-title">Expected trace appearance</div>
+    <div class="query-example">Customer CUST-10002 was charged twice for Unlimited Plus. Investigate and apply credit.</div>
+    <div class="route-path">Step 1 — BillingResolutionADK → Step 2 — CustomerCommsCrew</div>
+    <p class="small">Step 1 output summarizes SQL tool results: duplicate Unlimited Plus charge of 65.99 found, credit inserted as PENDING_APPROVAL, balance remains 131.98. Step 2 output is the polished letter; the main response area shows the final Step 2 text.</p>
+  </div>
+
+  <h4>6.8.6 Optional enhancements (not required for full marks)</h4>
+  <ul class="small">
+    <li>Secondary expander: raw <code>agent_context</code> for debugging</li>
+    <li>Sidebar sample-query buttons for local testing (see implementation guide — recommended for development, not part of this specification)</li>
+    <li>Clear button or query history</li>
+  </ul>
+
+  <hr />
+
+  <!-- 6 SETUP -->
+  <h2 id="setup">7. Setup &amp; Run Order</h2>
+  <div class="step-grid">
+    <div class="step-card"><div class="step-num">1</div><strong>Create venv &amp; install packages</strong><p class="small">langgraph, langchain-openai, llama-index, google-adk[a2a], crewai, streamlit, python-dotenv, sentence-transformers</p></div>
+    <div class="step-card"><div class="step-num">2</div><strong>Configure .env</strong><p class="small">Set OPENAI_API_KEY. Optionally set ADK model and agent card URLs.</p></div>
+    <div class="step-card"><div class="step-num">3</div><strong>Build database</strong><p class="small">Run 01_schema.sql then 02_seed_data.sql against data/telecom_ops.db using sqlite3 CLI or DB tool.</p></div>
+    <div class="step-card"><div class="step-num">4</div><strong>Implement &amp; test modules</strong><p class="small">LlamaIndex RAG, semantic SQL, then ADK services, then LangGraph, then Streamlit.</p></div>
+    <div class="step-card"><div class="step-num">5</div><strong>Start ADK services</strong><p class="small">Terminal 1: network diagnostics port 8001. Terminal 2: billing resolution port 8002.</p></div>
+    <div class="step-card"><div class="step-num">6</div><strong>Start Streamlit</strong><p class="small">Terminal 3: streamlit run ui/app.py from project root.</p></div>
+  </div>
+
+  <h3>7.1 Database Initialization (Manual)</h3>
+  <p>Using the sqlite3 command-line tool (or any SQL client):</p>
+  <ol>
+    <li>Ensure the data/ folder exists in your project.</li>
+    <li>Create or open data/telecom_ops.db.</li>
+    <li>Execute sql/01_schema.sql in full.</li>
+    <li>Execute sql/02_seed_data.sql in full.</li>
+    <li>Verify tables are populated — e.g. network_towers should have 10 rows; billing_charges should include a duplicate row for CUST-10002.</li>
+  </ol>
+
+  <hr />
+
+  <!-- 7 ARCHITECTURE DIAGRAMS -->
+  <h2 id="architecture">8. System Architecture Diagrams</h2>
+
+  <h3>8.1 High-Level Architecture</h3>
+  <div class="diagram-section">
+    <div class="mermaid">
+flowchart TB
+  subgraph UI["Streamlit UI"]
+    U[Customer Query]
+    T[Execution Trace]
+  end
+  subgraph LG["LangGraph Supervisor"]
+    S[Supervisor Router]
+    PR[PolicyRAG]
+    NA[NetworkAnalytics]
+    ND[NetworkDiagnosticsADK]
+    BR[BillingResolutionADK]
+    CC[CustomerCommsCrew]
+  end
+  subgraph LI["LlamaIndex Retrieval Only"]
+    VR[VectorStoreIndex on TXT docs]
+    OS[ObjectIndex Semantic SQL]
+  end
+  subgraph ADK["Google ADK A2A Services"]
+    NDS[Network Diagnostics port 8001]
+    BRS[Billing Resolution port 8002]
+  end
+  subgraph DB["SQLite telecom_ops.db"]
+    SQL[(All Tables)]
+  end
+  U --> S
+  S --> PR & NA & ND & BR & CC
+  PR --> VR
+  NA --> OS
+  OS --> SQL
+  ND -->|RemoteA2aAgent| NDS
+  BR -->|RemoteA2aAgent| BRS
+  NDS --> SQL
+  BRS --> SQL
+  CC --> T
+    </div>
+    <p class="diagram-caption">Figure 1 — All business data lives in SQLite. No in-memory dictionaries.</p>
+  </div>
+
+  <h3>8.2 LangGraph Supervisor Loop</h3>
+  <div class="diagram-section">
+    <div class="mermaid">
+flowchart LR
+  START((START)) --> SUP[Supervisor]
+  SUP -->|worker| W[Specialist Node]
+  W --> SUP
+  SUP -->|FINISH| END((END))
+    </div>
+    <p class="diagram-caption">Figure 2 — Every worker returns to supervisor until FINISH.</p>
+  </div>
+
+  <h3>8.3 ADK A2A Remote Pattern</h3>
+  <div class="diagram-section">
+    <div class="mermaid">
+flowchart LR
+  LG[LangGraph Node] --> RC[Remote Client Module]
+  RC -->|HTTP A2A| SVC[ADK Service Process]
+  SVC --> AG[ADK Agent]
+  AG --> T[SQL Tools]
+  T --> DB[(telecom_ops.db)]
+    </div>
+    <p class="diagram-caption">Figure 3 — ADK tools query SQLite; LangGraph never imports agent logic directly.</p>
+  </div>
+
+  <hr />
+
+  <!-- 8 SCENARIOS -->
+  <h2 id="scenarios">9. End-to-End Scenarios with Sequence Diagrams</h2>
+
+  <h3>9.1 Scenario 1 — Policy / FAQ (LlamaIndex Document RAG)</h3>
+  <div class="scenario-box">
+    <div class="box-title">Sample query</div>
+    <div class="query-example">What is Prodapt's roaming policy for Western Europe?</div>
+    <div class="route-path">Supervisor → PolicyRAG → Supervisor → CustomerCommsCrew → FINISH</div>
+  </div>
+  <div class="diagram-section">
+    <div class="mermaid">
+sequenceDiagram
+  autonumber
+  actor User
+  participant UI as Streamlit
+  participant Sup as Supervisor
+  participant RAG as PolicyRAG
+  participant LI as LlamaIndex VectorIndex
+  participant Docs as Policy TXT Files
+  participant Crew as CrewAI
+  User->>UI: Roaming policy for Europe?
+  UI->>Sup: invoke graph
+  Sup->>RAG: route PolicyRAG
+  RAG->>LI: query policy documents
+  LI->>Docs: retrieve relevant chunks
+  Docs-->>LI: roaming_policy.txt content
+  LI-->>RAG: synthesized answer
+  RAG->>Sup: update agent_context
+  Sup->>Crew: route CustomerCommsCrew
+  Crew-->>Sup: polished response
+  Sup->>Sup: FINISH
+  Sup-->>UI: result + trace
+  UI-->>User: display
+    </div>
+    <p class="diagram-caption">Figure 4 — Policy questions never touch SQL or ADK services.</p>
+  </div>
+
+  <h3>9.2 Scenario 2 — Network Analytics (LlamaIndex Semantic SQL)</h3>
+  <div class="scenario-box">
+    <div class="box-title">Sample query</div>
+    <div class="query-example">Which region had the most CRITICAL network outages recently?</div>
+    <div class="route-path">Supervisor → NetworkAnalytics → Supervisor → CustomerCommsCrew → FINISH</div>
+  </div>
+  <div class="diagram-section">
+    <div class="mermaid">
+sequenceDiagram
+  autonumber
+  actor User
+  participant UI as Streamlit
+  participant Sup as Supervisor
+  participant NA as NetworkAnalytics
+  participant OI as ObjectIndex
+  participant QE as SQL Query Engine
+  participant DB as telecom_ops.db
+  participant Crew as CrewAI
+  User->>UI: Most CRITICAL outages by region?
+  UI->>Sup: invoke graph
+  Sup->>NA: route NetworkAnalytics
+  NA->>OI: semantically match question to tables
+  OI-->>NA: selects network_outages table
+  NA->>QE: generate and run SQL
+  QE->>DB: SELECT region, COUNT WHERE severity=CRITICAL
+  DB-->>QE: Midwest has most CRITICAL outages
+  QE-->>NA: natural language answer
+  NA->>Sup: update agent_context
+  Sup->>Crew: route CustomerCommsCrew
+  Crew-->>Sup: formatted summary
+  Sup-->>UI: FINISH
+    </div>
+    <p class="diagram-caption">Figure 5 — ObjectIndex picks network_outages before SQL is generated.</p>
+  </div>
+
+  <h3>9.3 Scenario 3 — Network Diagnostics (ADK A2A + SQL Tools)</h3>
+  <div class="scenario-box">
+    <div class="box-title">Sample query</div>
+    <div class="query-example">My 5G keeps dropping in Austin near tower TX-512. Please diagnose.</div>
+    <div class="route-path">Supervisor → NetworkDiagnosticsADK → Supervisor → CustomerCommsCrew → FINISH</div>
+  </div>
+  <div class="diagram-section">
+    <div class="mermaid">
+sequenceDiagram
+  autonumber
+  actor User
+  participant UI as Streamlit
+  participant Sup as Supervisor
+  participant ND as NetworkDiagnostics Node
+  participant RC as RemoteA2a Client
+  participant A2A as ADK Service port 8001
+  participant AG as Network Diagnostics Agent
+  participant DB as telecom_ops.db
+  participant Crew as CrewAI
+  User->>UI: 5G drops near TX-512
+  UI->>Sup: invoke graph
+  Sup->>ND: route NetworkDiagnosticsADK
+  ND->>RC: invoke remote agent
+  RC->>A2A: A2A HTTP request
+  A2A->>AG: process request
+  AG->>DB: SQL check_tower_status TX-512
+  DB-->>AG: OPERATIONAL 5G signal -72 dBm
+  AG->>DB: SQL run_connectivity_diagnostics
+  DB-->>AG: performance metrics
+  AG-->>A2A: diagnostic report
+  A2A-->>RC: response
+  RC-->>ND: result text
+  ND->>Sup: update agent_context
+  Sup->>Crew: route CustomerCommsCrew
+  Crew-->>UI: empathetic customer response
+    </div>
+    <p class="diagram-caption">Figure 6 — ADK tools read tower and incident data from SQL, not Python dicts.</p>
+  </div>
+
+  <h3>9.4 Scenario 4 — Billing Dispute (ADK A2A + SQL Tools)</h3>
+  <div class="scenario-box">
+    <div class="box-title">Sample query</div>
+    <div class="query-example">Customer CUST-10002 was charged twice for Unlimited Plus. Investigate and apply credit.</div>
+    <div class="route-path">Supervisor → BillingResolutionADK → Supervisor → CustomerCommsCrew → FINISH</div>
+  </div>
+  <div class="diagram-section">
+    <div class="mermaid">
+sequenceDiagram
+  autonumber
+  actor User
+  participant UI as Streamlit
+  participant Sup as Supervisor
+  participant BR as BillingResolution Node
+  participant RC as RemoteA2a Client
+  participant A2A as ADK Service port 8002
+  participant AG as Billing Resolution Agent
+  participant DB as telecom_ops.db
+  participant Crew as CrewAI
+  User->>UI: CUST-10002 charged twice
+  UI->>Sup: invoke graph
+  Sup->>BR: route BillingResolutionADK
+  BR->>RC: invoke remote agent
+  RC->>A2A: A2A request
+  A2A->>AG: process dispute
+  AG->>DB: SELECT billing_accounts and billing_charges
+  DB-->>AG: balance 131.98 two 65.99 charges one duplicate
+  AG->>DB: INSERT billing_credits status PENDING_APPROVAL
+  DB-->>AG: balance unchanged at 131.98
+  AG-->>A2A: resolution summary
+  A2A-->>BR: response
+  BR->>Sup: update agent_context
+  Sup->>Crew: route CustomerCommsCrew
+  Crew-->>UI: professional billing letter
+    </div>
+    <p class="diagram-caption">Figure 7 — 65.99 is over the 50.00 auto-approval limit, so the credit is stored as PENDING_APPROVAL and the balance stays 131.98.</p>
+  </div>
+
+  <h3>9.5 Scenario 5 — Combined Multi-Worker Flow</h3>
+  <div class="scenario-box">
+    <div class="box-title">Sample query</div>
+    <div class="query-example">We had a 6-hour outage in the Midwest. Am I eligible for an SLA credit and what does policy say?</div>
+    <div class="route-path">Supervisor → NetworkAnalytics → Supervisor → PolicyRAG → Supervisor → CustomerCommsCrew → FINISH</div>
+  </div>
+  <div class="diagram-section">
+    <div class="mermaid">
+sequenceDiagram
+  autonumber
+  actor User
+  participant Sup as Supervisor
+  participant NA as NetworkAnalytics
+  participant DB as telecom_ops.db
+  participant PR as PolicyRAG
+  participant Docs as sla_policy.txt
+  participant Crew as CrewAI
+  User->>Sup: 6-hour Midwest outage SLA credit?
+  Sup->>NA: need outage facts
+  NA->>DB: semantic SQL on network_outages
+  DB-->>NA: CRITICAL 6 hours 8500 customers
+  NA->>Sup: agent_context updated
+  Sup->>PR: need policy rules
+  PR->>Docs: retrieve SLA credit eligibility
+  Docs-->>PR: Business 4hr Consumer 8hr thresholds
+  PR->>Sup: agent_context updated
+  Sup->>Crew: synthesize combined answer
+  Crew-->>Sup: eligibility determination with policy citation
+  Sup->>Sup: FINISH
+    </div>
+    <p class="diagram-caption">Figure 8 — Supervisor sequences multiple specialists; CrewAI merges all context.</p>
+  </div>
+
+  <h3>9.6 Supervisor Routing Decision Matrix</h3>
+  <table>
+    <thead><tr><th>Question Type</th><th>Signals / Keywords</th><th>First Worker</th><th>Then</th></tr></thead>
+    <tbody>
+      <tr><td>Policy / FAQ</td><td>policy, roaming, SLA, 5G FAQ, upgrade, rules</td><td>PolicyRAG</td><td>CustomerCommsCrew → FINISH</td></tr>
+      <tr><td>Analytics</td><td>outage trends, packet loss, latency, how many, top N</td><td>NetworkAnalytics</td><td>CustomerCommsCrew → FINISH</td></tr>
+      <tr><td>Connectivity</td><td>signal drops, tower ID, diagnose, not working</td><td>NetworkDiagnosticsADK</td><td>CustomerCommsCrew → FINISH</td></tr>
+      <tr><td>Billing</td><td>charged twice, credit, dispute, CUST- prefix</td><td>BillingResolutionADK</td><td>CustomerCommsCrew → FINISH</td></tr>
+      <tr><td>Combined</td><td>outage + policy, billing + policy</td><td>Data or ADK worker first</td><td>Other worker → CustomerCommsCrew → FINISH</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="practice">9.7 Practice Queries</h3>
+  <div class="note">
+    <div class="box-title">For development — not extra graded scenarios</div>
+    <p class="small">
+      The demo and the grading table stay on Scenarios 1–5. The seed data is larger than those five flows on purpose.
+      Use the queries below while you build. Extra rows, older bills, and earlier tower samples are intentional.
+    </p>
+  </div>
+
+  <h4>How to read the seed</h4>
+  <ul class="small">
+    <li><code>network_towers</code> has 10 rows. Each tower has several <code>tower_performance</code> samples. Diagnostics and packet-loss rankings use the newest <code>recorded_at</code> only.</li>
+    <li><code>billing_charges.invoice_status = 'OPEN'</code> is the current bill. <code>'PAID'</code> rows are prior months. <code>current_balance</code> equals the open charges until a new <code>APPLIED</code> credit reduces it.</li>
+    <li>The same plan name in July and September is a new month, not a duplicate. A duplicate is the same description in the same billing period, or <code>is_duplicate_flag = 1</code>.</li>
+    <li>A charge that already has an <code>APPLIED</code> credit must not be credited again.</li>
+  </ul>
+
+  <h4>Billing — try every side of the $50 limit</h4>
+  <p class="small">Route: Supervisor → BillingResolutionADK → CustomerCommsCrew. Amounts are the extra line, not the whole balance.</p>
+  <table>
+    <thead><tr><th>Customer</th><th>Open duplicate</th><th>Amount</th><th>Correct write</th></tr></thead>
+    <tbody>
+      <tr><td>CUST-10027 Chris Dalton</td><td>International Day Pass</td><td>12.00</td><td>APPLIED, balance reduced by 12.00</td></tr>
+      <tr><td>CUST-10008 Maya Chen</td><td>Japan pay-per-use data</td><td>36.00</td><td>APPLIED, balance reduced by 36.00</td></tr>
+      <tr><td>CUST-10128 Ben Carter</td><td>Travel Pass Zone B 5-day bundle</td><td>50.00</td><td>APPLIED. 50.00 does not exceed the limit</td></tr>
+      <tr><td>CUST-10002 Alex Romero</td><td>Unlimited Plus</td><td>65.99</td><td>PENDING_APPROVAL, balance stays 131.98</td></tr>
+      <tr><td>CUST-10011 Derek Holt</td><td>Device installment</td><td>80.00</td><td>PENDING_APPROVAL, balance unchanged</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Billing — leave these alone</h4>
+  <table>
+    <thead><tr><th>Query to try</th><th>Correct outcome</th></tr></thead>
+    <tbody>
+      <tr><td>CUST-10136 Sofia Alvarez was charged 60 dollars for a Japan Travel Pass. Is that a duplicate?</td><td>No. Five Zone C days at 12.00 each. The roaming policy rate stands. No new credit.</td></tr>
+      <tr><td>CUST-10172 Victor Almeida disputes 18.40 of Brazil data.</td><td>One Zone D line at the published pay-per-use rate. Not a duplicate. No credit.</td></tr>
+      <tr><td>CUST-10002 also has an August Mexico data charge. Credit that too.</td><td>Already resolved. Credit 2 is APPLIED for 22.00 because Unlimited Plus includes Zone A. Do not credit CHG-48002 again. September balance is still the two open plan charges.</td></tr>
+      <tr><td>CUST-10071 Grace Kim was double-charged for voicemail.</td><td>That duplicate is on the paid August bill and credit 3 is already APPLIED. The September bill has no open duplicate.</td></tr>
+      <tr><td>Why does CUST-10002 have more than two Unlimited Plus rows?</td><td>July and August are PAID history. Only the two September rows, CHG-50021 and CHG-50022, are the open duplicate.</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Network — latest sample, not the week average</h4>
+  <table>
+    <thead><tr><th>Query to try</th><th>Worker</th><th>Correct outcome</th></tr></thead>
+    <tbody>
+      <tr><td>Which towers have the highest packet loss right now?</td><td>NetworkAnalytics</td><td>Newest sample only: FL-090 at 100 percent, then TX-208 at 8.6, then IL-221 at 5.4. FL-090 was still carrying traffic earlier in the week.</td></tr>
+      <tr><td>Diagnose 5G drops near tower TX-512 in Austin.</td><td>NetworkDiagnosticsADK</td><td>Status OPERATIONAL, technology 5G, signal −72 dBm, packet loss 3.8 percent, downlink 85 Mbps, open incident INC-8841. Earlier samples that week were healthy.</td></tr>
+      <tr><td>What is wrong with tower FL-090 in Miami?</td><td>NetworkDiagnosticsADK</td><td>OFFLINE on the latest sample. Packet loss 100 percent, throughput 0, incident INC-8702. Separate from resolved outage OUT-2026-0901.</td></tr>
+      <tr><td>Summarize the Southwest region.</td><td>NetworkDiagnosticsADK</td><td>Two towers: TX-512 OPERATIONAL, TX-208 DEGRADED.</td></tr>
+      <tr><td>Which region had the most CRITICAL outages?</td><td>NetworkAnalytics</td><td>Midwest, for all of 2026 and for September 2026 alone. Count severity CRITICAL only. MAJOR and MINOR rows are in the log so an unfiltered count is a different question.</td></tr>
+      <tr><td>How long was the Midwest outage on 12 September 2026, and how many customers?</td><td>NetworkAnalytics</td><td>OUT-2026-0912 only. CRITICAL, 6 hours, 8500 customers, fiber backhaul cut, RESOLVED. It is the only 6-hour outage and the longest outage in the table.</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Policy — answers live in the TXT files</h4>
+  <table>
+    <thead><tr><th>Query to try</th><th>Correct outcome from the documents</th></tr></thead>
+    <tbody>
+      <tr><td>What does roaming cost in Japan? I am on Unlimited Plus.</td><td>Japan is Zone C. Travel Pass 12.00 USD per day with 2 GB, then 256 kbps. Unlimited Plus does not include Zone C. Pay-per-use is 0.20 USD per MB. Spend cap is 100.00 USD.</td></tr>
+      <tr><td>What is the roaming policy for Western Europe, the UK, and France?</td><td>All Zone B. Travel Pass 10.00 USD per day with 5 GB. Business Unlimited pays 5.00. Enterprise Mobile includes Zone B.</td></tr>
+      <tr><td>What does roaming cost in Greece, Poland, India, or Brazil?</td><td>Zone D, not Western Europe. Travel Pass 15.00 USD per day, or 2.00 USD per MB.</td></tr>
+      <tr><td>A 6-hour outage. Who gets an SLA credit?</td><td>Business yes, 22.50 USD on Business Unlimited, and that amount may be applied. Enterprise yes, 62.25 USD on Enterprise Mobile, pending approval. Consumer no. Confirm the region and the duration in SQL before quoting dollars.</td></tr>
+      <tr><td>Can I trade in an iPhone 13? What about a 13 mini if I have only 17 payments?</td><td>iPhone 13 in good condition is 180 USD. The mini is 140 / 85 / 25, not 180. Standard early upgrade starts at installment 18 of 36. Past-due of 25.00 USD exactly does not block; above 25.00 does. A suspended line cannot upgrade.</td></tr>
+      <tr><td>Why is my 5G slow indoors?</td><td>5G FAQ: buildings cut mid-band about 10 to 20 dB and block millimeter wave. Wi-Fi calling is included. A strong signal with dropped sessions still needs a tower diagnostic.</td></tr>
+    </tbody>
+  </table>
+
+  <hr />
+
+  <!-- 9 EVALUATION -->
+  <h2 id="evaluation">10. Evaluation Criteria &amp; Demo</h2>
+  <table>
+    <thead><tr><th>Criteria</th><th>Weight</th><th>What Evaluators Check</th></tr></thead>
+    <tbody>
+      <tr><td>Correct framework per scenario</td><td>30%</td><td>Policy→RAG; analytics→semantic SQL; diagnostics/billing→ADK A2A; comms→CrewAI</td></tr>
+      <tr><td>LangGraph supervisor</td><td>20%</td><td>Structured routing, worker loop, agent_context accumulation, FINISH after CrewAI</td></tr>
+      <tr><td>LlamaIndex RAG + semantic SQL</td><td>20%</td><td>Vector index on docs; ObjectIndex table selection; no LlamaIndex agents</td></tr>
+      <tr><td>ADK A2A + SQL tools</td><td>20%</td><td>Two services running; RemoteA2aAgent from LangGraph; tools use SQL not dicts</td></tr>
+      <tr><td>Streamlit UX</td><td>10%</td><td>Clean UI; sidebar system status + framework map; prominent final response; <strong>Agent Execution Trace</strong> with step order, worker names, and truncated outputs</td></tr>
+    </tbody>
+  </table>
+
+  <h3>10.1 Fifteen-Minute Demo Script</h3>
+  <ol>
+    <li>Explain business use case (Section 1) and architecture (Section 8)</li>
+    <li>Show database populated from SQL scripts — point out billing duplicate row for CUST-10002</li>
+    <li>Start both ADK services; show agent cards in browser</li>
+    <li>Run Scenario 1 — policy question; show PolicyRAG in trace</li>
+    <li>Run Scenario 2 — outage analytics; explain semantic table selection</li>
+    <li>Run Scenario 3 — tower diagnostic; confirm SQL was queried (not hard-coded data)</li>
+    <li>Run Scenario 4 — billing dispute; show a PENDING_APPROVAL credit of 65.99 and confirm current_balance is still 131.98</li>
+    <li>Open <strong>Agent Execution Trace</strong> — walk through each step (worker name + output); confirm routing matches scenario</li>
+    <li>Show CrewAI polished response vs specialist output in the trace</li>
+  </ol>
+
+  <div class="success-box">
+    <div class="box-title">Start here</div>
+    <p class="small">
+      Run the SQL scripts → implement LlamaIndex modules → build ADK services with SQL tools → wire LangGraph →
+      add CrewAI → build Streamlit. Use your course labs as reference for each framework. Good luck!
+    </p>
+  </div>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({ theme: 'neutral', startOnLoad: false, sequence: { actorMargin: 50 } });
+  mermaid.run();
+</script>
+</body>
+</html>

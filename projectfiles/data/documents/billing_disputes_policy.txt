@@ -1,0 +1,179 @@
+PRODAPT
+Internal Policy Document
+
+Document ID: POL-BILL-003
+Title: Billing Disputes, Duplicate Charges, and Credit Approval
+Version: 5.0
+Effective date: 2026-02-01
+Owner: Billing Resolution
+Classification: Internal. Required for any credit posted to a Prodapt account.
+Applies to: All consumer, business, and enterprise bills.
+
+1. Purpose
+
+This policy controls how long a customer has to dispute a charge, which charges may be credited, and when a credit may be applied immediately versus when it must wait for a supervisor.
+
+Account balances, charge lines, and duplicate flags are not stored in this document. They are in the billing database. An agent must look up the account before quoting a balance or stating that a duplicate exists.
+
+2. Dispute window
+
+A customer has 60 days from the charge date to open a dispute.
+The charge date is the date on the charge line, not the date the customer noticed it.
+A dispute opened on day 60 is still in time. A dispute opened on day 61 is late and must be declined unless a billing supervisor grants a one-time exception, which is recorded on the dispute.
+The window applies to plan charges, add-ons, roaming, device installments, taxes billed in error, and late fees.
+
+How to answer "how long do I have to dispute a charge?":
+You have 60 days from the charge date.
+
+3. What may be credited
+
+- A duplicate charge: the same description and the same billing period posted more than once, or a charge line with the duplicate flag set.
+- A roaming charge that violates the roaming policy (for example Travel Pass plus pay-per-use for the same data). Ordinary published roaming rates are not credits.
+- An SLA credit that the SLA policy says is owed.
+- A device installment or add-on the customer did not authorize, when the order system has no matching order.
+- A tax billed on a tax-exempt enterprise account, with the exemption certificate already on file.
+
+4. What must not be credited
+
+- Usage the customer actually incurred at a published rate.
+- A charge older than 60 days, unless a supervisor exception is on the dispute.
+- A second credit for the same charge id.
+- Cash, check, or external refund. Credits reduce the Prodapt account balance or sit pending. They are not sent as a payment to the customer.
+- An amount that is still only a guess. Look up the charge before choosing the credit amount.
+
+5. How to identify a duplicate
+
+Treat a charge as a duplicate when either of these is true:
+
+a. The charge line's duplicate flag is set, or
+b. Another charge for the same customer has the same description and the same billing period.
+
+The credit amount for a duplicate is the amount of the extra line, once. If two identical plan charges posted, credit one of them, not both. Leave one valid charge on the account.
+If the flag is set and the description also matches another line in that period, that is one duplicate, not two.
+
+6. Auto-approval limit
+
+The auto-approval limit is 50.00 USD per credit.
+
+- If the credit amount is 50.00 USD or less, the credit is auto-approved.
+  Record the credit with status APPLIED.
+  Reduce the account's current balance by the credit amount.
+  The new balance must not go below zero. If it would, apply only enough to bring the balance to zero and leave a note. Do not create a cash refund for the remainder.
+
+- If the credit amount is greater than 50.00 USD, the credit is not auto-approved.
+  Record the credit with status PENDING_APPROVAL.
+  Do not change the current balance.
+  The balance changes only after a billing supervisor approves the row and the status becomes APPLIED.
+  Tell the customer the credit is submitted and waiting for approval. Do not say the credit has already been applied.
+
+A supervisor may reject a pending credit. Set the status to REJECTED and leave the balance unchanged.
+
+Credits above 200.00 USD follow the same PENDING_APPROVAL rule and also require a manager, not only a billing supervisor. The agent still must not reduce the balance at the time of the request.
+
+Worked examples:
+
+Example A. A duplicate monthly plan charge of 65.99 USD.
+65.99 is greater than 50.00. Insert the credit as PENDING_APPROVAL. Do not reduce the balance. One valid plan charge remains.
+
+Example B. A duplicate add-on of 12.00 USD.
+12.00 is less than or equal to 50.00. Insert the credit as APPLIED and reduce the current balance by 12.00.
+
+Example C. A credit of exactly 50.00 USD.
+50.00 does not exceed the limit. Status APPLIED. Reduce the balance by 50.00.
+
+7. One dispute per charge
+
+Open at most one active dispute (status OPEN or ESCALATED) per charge id.
+If a dispute is already OPEN, do not open a second one and do not post a second credit. Update the existing dispute.
+When a credit moves to APPLIED, set the related dispute to RESOLVED and record the credit id in the resolution notes.
+When a credit is REJECTED, set the dispute to RESOLVED and state why it was denied.
+
+8. Escalation
+
+Escalate to a billing supervisor, and set the dispute status to ESCALATED, when:
+
+- The credit is greater than 50.00 USD.
+- The customer asks for more than the duplicate amount.
+- The dispute is outside the 60 day window and the customer is asking for an exception.
+- The account is Enterprise.
+- Fraud is suspected (the customer denies the line entirely, or charges appear from a country the customer could not have visited). Fraud cases go to the fraud desk, not to a standard credit.
+
+9. Audit
+
+Every credit must be a row in the billing credits table with a customer id, an amount, a reason, a status, and a timestamp.
+Do not change a balance with a manual note only. If the balance changes, an APPLIED credit row must explain the change.
+Do not keep a side list of credits outside the billing database.
+The reason text should name the charge description and the billing period, for example "Duplicate Unlimited Plus charge for 2026-09".
+
+10. What support should tell the customer
+
+State whether a duplicate was found, the amount, and whether the credit is APPLIED or PENDING_APPROVAL.
+If the status is PENDING_APPROVAL, give the customer the dispute id and say a supervisor must approve credits over 50.00 USD.
+If no duplicate exists, say so, and do not create a credit to be helpful.
+Quote document id POL-BILL-003 when asked which policy was used.
+
+11. SLA credits posted by billing
+
+When the SLA policy says a customer is eligible, billing posts that dollar amount under this policy.
+The SLA policy chooses eligibility and the formula. This policy chooses APPLIED versus PENDING_APPROVAL.
+A 22.50 USD Business SLA credit is APPLIED.
+A 62.25 USD Enterprise SLA credit is PENDING_APPROVAL because it is over 50.00 USD.
+
+12. Same description is not always a duplicate
+
+A plan that bills every month will show the same description in 2026-07, 2026-08, and 2026-09. Those are three periods, not a duplicate.
+A duplicate requires the same customer, the same description, and the same billing period, or a line whose duplicate flag is set.
+Credit one extra line, not every line that shares the description.
+If a duplicate was already credited and that credit is APPLIED, do not credit it again. A resolved dispute is the record.
+A PAID invoice from a prior month is history. Do not subtract that history from the current balance a second time.
+
+13. Amounts agents will actually see
+
+Compare the duplicate amount to 50.00 USD. The status is not a judgment call.
+
+Amount of the extra line     Status to insert              Balance
+12.00 USD                    APPLIED                       reduce by 12.00
+15.00 USD                    APPLIED                       reduce by 15.00
+22.00 USD                    APPLIED                       reduce by 22.00
+36.00 USD                    APPLIED                       reduce by 36.00
+50.00 USD exactly            APPLIED                       reduce by 50.00
+50.01 USD                    PENDING_APPROVAL              do not change the balance
+65.99 USD                    PENDING_APPROVAL              do not change the balance
+75.00 USD                    PENDING_APPROVAL              do not change the balance
+80.00 USD                    PENDING_APPROVAL              do not change the balance
+Anything over 200.00 USD     PENDING_APPROVAL plus manager do not change the balance
+
+A duplicate Unlimited Plus charge of 65.99 USD is the over-limit case. Insert PENDING_APPROVAL. Leave the current balance unchanged. One valid 65.99 USD plan charge stays on the account.
+A duplicate International Day Pass of 12.00 USD is the under-limit case. Insert APPLIED and reduce the balance by 12.00.
+A duplicate Japan pay-per-use line of 36.00 USD is under the limit. APPLIED, reduce by 36.00.
+A duplicate device installment of 80.00 USD is over the limit. PENDING_APPROVAL, balance unchanged.
+A duplicate Travel Pass bundle of exactly 50.00 USD does not exceed the limit. APPLIED, reduce by 50.00.
+
+14. Charges that look wrong but are not duplicates
+
+A single Travel Pass or pay-per-use line at a price published in the roaming policy is not a duplicate. Examples: 60.00 USD for five Japan Zone C days (5 times 12.00), or a single Brazil Zone D data line. Decline the dispute. Do not insert a credit.
+A sales-tax line next to a plan charge is not a duplicate of the plan. Different description.
+A late fee is not a duplicate of the plan. If the payment posted after the due date, the late fee stands and any requested credit is REJECTED.
+Zone A pay-per-use data on an Unlimited Plus line is a real billing error, because Unlimited Plus includes Canada and Mexico. Credit that pay-per-use amount under section 6. If that credit is already APPLIED, stop.
+5G Home cannot roam. A roaming line on a 5G Home account is a billing error. Credit it if it is still inside 60 days and has not already been credited.
+
+15. Lookup rules
+
+Read the account from the billing database before quoting a balance, a name, or a charge.
+The current balance equals the open charges, minus credits that were APPLIED against those open charges. Paid charges from prior months are not added again.
+Return the open charge lines, including which ones have the duplicate flag, the description, the amount, and the billing period.
+If a dispute is already OPEN or ESCALATED for that charge, do not open another dispute and do not post a second credit.
+A CLOSED account with a zero balance has nothing to credit.
+A SUSPENDED account can still dispute an open charge. Suspension does not waive the 60-day window and does not by itself create a credit. A suspended account with a past-due balance over 25.00 USD also cannot start a device upgrade. That rule is in the device upgrade policy. It does not change the credit limit here.
+
+16. What the customer should hear
+
+Duplicate found, amount 50.00 USD or less: say the credit has been applied and give the new balance.
+Duplicate found, amount over 50.00 USD: say the credit is waiting for supervisor approval and the balance is unchanged until then.
+No duplicate, published rate: say the charge matches the rate card and no credit was posted.
+Already credited: say the earlier credit stands and quote the resolved dispute.
+Outside 60 days: say the window has closed. Day 60 is still in time. Day 61 is late.
+
+17. Document control
+
+The dispute window is 60 days. The auto-approval limit is 50.00 USD. Amounts greater than 50.00 USD use status PENDING_APPROVAL and do not change the balance until approval. Version 5.0 did not raise the limit.

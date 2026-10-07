@@ -1,0 +1,17 @@
+langgraph
+langchain-openai
+llama-index
+llama-index-llms-openai-like
+llama-index-embeddings-huggingface
+google-adk[a2a]
+crewai
+streamlit
+python-dotenv
+sentence-transformers
+transformers
+huggingface-hub
+torch
+uvicorn
+chromadb
+httpx
+requests

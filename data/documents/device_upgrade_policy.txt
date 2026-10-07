@@ -1,0 +1,184 @@
+PRODAPT
+Internal Policy Document
+
+Document ID: POL-DEV-006
+Title: Device Upgrade, Early Upgrade, and Trade-In Policy
+Version: 2.2
+Effective date: 2026-05-01
+Owner: Device Lifecycle
+Classification: Internal. Trade-in quotes in section 4 may be given to customers as estimates.
+Applies to: Prodapt handset installment plans. Does not apply to 5G Home gateways or bring-your-own-device lines with no installment.
+
+1. Purpose
+
+This policy states when a customer may upgrade a handset, how the 36 month installment works, what early upgrade requires, and the trade-in credit for common devices. The iPhone 13 answers are in section 4 and section 6.
+
+Account past-due status and the live balance are not in this document. Check the billing account before promising that a specific customer is eligible. This document says what the rules are.
+
+2. Standard installment
+
+New devices are financed over 36 months.
+The monthly device installment is separate from the service plan (Unlimited Plus, Unlimited Essential, Business Unlimited, or Enterprise Mobile).
+There is no interest on a Prodapt installment while the account stays active.
+If the customer cancels service, the remaining device balance is due on the final bill.
+Trade-in credit, once the device is received and graded, is applied to the new installment agreement. It is not paid as cash. If the trade-in credit is larger than the remaining balance the customer owes on the old device, the extra reduces the new device's installment. It does not become a check.
+
+3. When a customer may upgrade
+
+A customer may start a new installment when all of the following are true:
+
+a. The account is in good standing. The past-due balance is 25.00 USD or less. A past-due balance above 25.00 USD blocks the upgrade until it is paid. The current bill that is not yet due does not count as past due.
+
+b. The line is ACTIVE. Suspended and closed lines cannot upgrade.
+
+c. One of these device conditions is true:
+   - The current device is paid off (36 of 36 installments, or bought outright), or
+   - Early upgrade in section 5 is satisfied, or
+   - The customer will pay the remaining device balance in full at checkout.
+
+Consumer, Business, and Enterprise use the same device rules. Enterprise lines still need the account to be in good standing. A business administrator must approve an enterprise upgrade; the support agent must not start the installment without that approval on the account.
+
+4. Trade-in credit estimates
+
+Credits below assume the device powers on, is not on a financial blacklist, and is not activation-locked to another person. The estimate is not final until Prodapt receives the device and grades it. The customer has 14 days from the new device ship date to send the trade-in. If the device does not arrive, the estimated credit is reversed onto the bill.
+
+Condition grades:
+
+- Good: powers on, no cracks, no liquid damage, battery holds a charge through a normal day.
+- Fair: powers on, light scratches, small hairline crack that does not affect touch, battery still usable.
+- Damaged: cracked glass across the display, liquid damage, or swollen battery, but the device still powers on.
+- A device that does not power on has a trade-in value of 0.00 USD. It does not qualify for early-upgrade waiver of the remaining balance.
+
+Estimated trade-in credit in USD, effective with this version:
+
+Device                  Good      Fair      Damaged
+iPhone 12               120       70        20
+iPhone 12 Pro           160       100       30
+iPhone 13               180       110       35
+iPhone 13 mini          140       85        25
+iPhone 13 Pro           250       160       50
+iPhone 13 Pro Max       280       175       55
+iPhone 14               250       160       50
+iPhone 14 Pro           320       210       70
+iPhone 15               360       240       80
+iPhone 15 Pro           450       300       100
+Galaxy S21              90        50        15
+Galaxy S22              140       80        25
+Galaxy S23              200       130       40
+Pixel 6                 70        40        10
+Pixel 7                 110       65        20
+Pixel 8                 180       110       35
+
+Devices not on this table are quoted by the trade-in tool at checkout. Support must not invent a value for an unlisted model.
+
+5. Early upgrade
+
+Standard early upgrade:
+The customer may upgrade after 18 of the 36 monthly installments are billed (50 percent of the term), the account is in good standing under section 3, and a trade-in in Good or Fair condition is accepted. Damaged condition does not qualify for the remaining-balance waiver.
+When standard early upgrade is approved, the unpaid installments on the old device are waived after the trade-in is graded Good or Fair. If the grade comes back Damaged or the device never arrives, the waiver is reversed and the remaining balance returns to the bill.
+
+Upgrade Anytime add-on:
+The add-on is 6.00 USD per month per line.
+After the add-on has been on the line for 30 days, the customer may upgrade at any time, without waiting for installment 18, if the device powers on and the account is in good standing.
+The remaining device balance is waived only when the trade-in is received and powers on. Condition still affects the trade-in credit in section 4, but Upgrade Anytime does not require a Good or Fair grade to waive the remaining balance. A device that does not power on does not waive the balance.
+The customer must start a new 36 month installment on the new device. Upgrade Anytime does not make the new device free.
+
+6. Direct answers for an iPhone 13
+
+Can the customer trade in an iPhone 13?
+Yes, if the account is in good standing (past-due balance 25.00 USD or less), the line is ACTIVE, and the iPhone 13 powers on and is not activation-locked.
+The estimated credit is 180 USD in Good condition, 110 USD in Fair condition, and 35 USD in Damaged condition.
+The credit is an estimate until the device is graded. The customer has 14 days to mail it in.
+
+Can the customer upgrade an iPhone 13 that is still on installments?
+Yes, if at least 18 of 36 installments have been billed and the trade-in grades Good or Fair.
+Yes, earlier than 18 installments, if that line has had Upgrade Anytime (6.00 USD per month) for at least 30 days and the phone powers on.
+No, if fewer than 18 installments have been billed and Upgrade Anytime is not on the line, unless the customer pays the remaining device balance at checkout.
+
+An iPhone 13 is compatible with Prodapt 5G mid-band. Compatibility does not change the trade-in amounts. The 5G FAQ covers compatibility. This policy covers money and eligibility.
+
+iPhone 13 mini, iPhone 13 Pro, and iPhone 13 Pro Max use their own rows in section 4. Do not quote the iPhone 13 value of 180 USD for those models.
+
+7. What the new bill looks like
+
+The next bill contains:
+- The service plan, unchanged by the upgrade unless the customer also changed plans.
+- The first installment of the new device.
+- The trade-in credit, after grading, as a bill credit. Grading usually finishes within two billing cycles. Until then, the installment bills in full and the credit posts later.
+- Upgrade Anytime at 6.00 USD if the customer kept or added it.
+
+A trade-in credit is a billing credit. If a manual adjustment is required after grading, the billing disputes policy applies, including the 50.00 USD auto-approval limit. The estimated values in section 4 are device credits processed by the trade-in system, not a reason to bypass a duplicate-charge investigation.
+
+8. Business and enterprise
+
+Business Unlimited lines follow sections 2 through 6. The account administrator must be the person who accepts the installment, or must have granted the user that role.
+Enterprise Mobile device upgrades are ordered by the enterprise administrator. A support agent may explain this policy and the trade-in table, and may not bind an enterprise installment during a consumer-style call.
+
+9. More trade-in estimates
+
+Same grades as section 4. A model not listed here and not listed in section 4 has no published estimate. Do not invent one.
+
+Device                       Good      Fair      Damaged
+iPhone 16                    550       380       140
+iPhone 16 Pro                690       470       180
+iPhone 16 Pro Max            760       520       200
+iPhone SE (3rd generation)   80        45        15
+Galaxy S24                   280       180       60
+Galaxy S24 Ultra             420       280       90
+Galaxy A54                   70        40        10
+Pixel 9                      260       170       55
+Pixel 9 Pro                  400       270       90
+iPad (10th generation)       150       90        30
+
+Watches, headphones, and chargers are not in the phone table. A watch with its own line can be traded only when a current estimate is printed at checkout. Support must not reuse an iPhone value for a watch.
+
+10. Eligibility questions
+
+Can I trade in an iPhone 13?
+Yes, when the line is ACTIVE, the phone powers on, it is not activation-locked, and the past-due balance is 25.00 USD or less. Estimates: 180 USD Good, 110 USD Fair, 35 USD Damaged. The customer has 14 days after the new device ships to send it in.
+
+Can I trade in an iPhone 13 mini, 13 Pro, or 13 Pro Max?
+Yes, under the same account rules, at that model's own row. Mini is 140 / 85 / 25. Pro is 250 / 160 / 50. Pro Max is 280 / 175 / 55. Do not quote 180 USD for those models.
+
+I have 17 of 36 installments billed, and I do not have Upgrade Anytime.
+Not yet. Standard early upgrade starts when installment 18 has been billed. The customer can pay the remaining device balance at checkout, add Upgrade Anytime and wait 30 days, or wait until installment 18.
+
+I have 18 of 36 installments billed.
+Standard early upgrade is available if the trade-in later grades Good or Fair and the account is in good standing. Damaged does not waive the remaining balance on the standard path.
+
+Upgrade Anytime has been on the line for 29 days.
+Not yet. The add-on must have been on the line for 30 days. On day 30 it can be used if the phone powers on and the account is in good standing.
+
+Upgrade Anytime has been on the line for 31 days and the phone has a cracked screen but powers on.
+The remaining balance can be waived because Upgrade Anytime does not require a Good or Fair grade. The trade-in credit itself is still the Damaged amount, not the Good amount. The new phone still starts a 36 month installment.
+
+The past-due balance is 25.00 USD.
+Allowed. The block starts when past-due is above 25.00 USD. 25.00 USD exactly does not block. 25.01 USD blocks until it is paid. The current bill that is not yet due is not past due.
+
+The account is suspended or closed.
+No upgrade. The line must be ACTIVE. Paying the past-due amount and restoring the line comes before any trade-in quote is turned into an order.
+
+The phone does not power on.
+Trade-in value is 0.00 USD. Early-upgrade waiver does not apply. Upgrade Anytime waiver does not apply. The customer can still buy a new device by paying any remaining balance on the old one.
+
+Bring your own device, no installment.
+There is nothing to upgrade under this policy. The customer may start a new 36 month installment if the account is in good standing, and may trade in a phone they own at the table above.
+
+Lost or stolen phone.
+File the loss first so the line can be suspended or the SIM replaced. A phone the customer cannot return cannot be traded in. Insurance, if any, is a separate contract and is not a trade-in credit. Do not quote a Good-condition value for a phone that will not be returned.
+
+Enterprise line.
+Explain the table. Do not start the installment. The enterprise administrator places the order.
+
+Business line.
+The account administrator, or a user that administrator has authorized, must accept the installment.
+
+11. Bill timing
+
+The trade-in estimate is not on the bill until the device is graded. Grading usually finishes within two billing cycles. Until then the new installment bills in full.
+If the grade is lower than the estimate, the difference posts as a charge. If that adjustment has to be handled as a manual credit, the billing disputes policy applies, including the 50.00 USD auto-approval limit.
+A duplicate device-installment line on a bill is a billing dispute, not an upgrade. Do not "fix" it by starting another upgrade.
+
+12. Document control
+
+iPhone 13 Good / Fair / Damaged estimates remain 180 / 110 / 35 USD. The early-upgrade point remains installment 18 of 36. Upgrade Anytime remains 6.00 USD per month with a 30 day wait. The past-due block remains 25.00 USD. Version 2.2 did not add a new waiver.
