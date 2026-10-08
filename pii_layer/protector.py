@@ -1,12 +1,14 @@
-"""Reversible masking for customer PII at external LLM boundaries."""
+"""Authenticated encryption for customer PII at external LLM boundaries."""
 
 from __future__ import annotations
 
 import re
 
+from cryptography.fernet import Fernet
+
 
 class PIIProtector:
-    """Mask and restore customer PII for one request.
+    """Encrypt and restore customer PII for one request.
 
     Operational network identifiers such as tower IDs and tower names are
     intentionally not matched, so diagnostic agents retain useful context.
@@ -19,20 +21,22 @@ class PIIProtector:
     )
 
     def __init__(self) -> None:
+        self._cipher = Fernet(Fernet.generate_key())
         self._token_by_value: dict[tuple[str, str], str] = {}
-        self._value_by_token: dict[str, str] = {}
+        self._encrypted_by_token: dict[str, bytes] = {}
 
     def protect(self, text: str) -> str:
-        """Replace detected customer PII with request-local tokens."""
+        """Encrypt detected customer PII and replace it with opaque tokens."""
         protected = text
         for kind, pattern in self._patterns:
             protected = pattern.sub(lambda match: self._token(kind, match.group(0)), protected)
         return protected
 
     def restore(self, text: str) -> str:
-        """Restore request-local tokens in model output."""
+        """Decrypt and restore request-local tokens in model output."""
         restored = text
-        for token, value in self._value_by_token.items():
+        for token, encrypted_value in self._encrypted_by_token.items():
+            value = self._cipher.decrypt(encrypted_value).decode("utf-8")
             restored = restored.replace(token, value)
         return restored
 
@@ -49,7 +53,7 @@ class PIIProtector:
         key = (kind, value)
         token = self._token_by_value.get(key)
         if token is None:
-            token = f"<PII_{kind}_{len(self._token_by_value) + 1}>"
+            token = f"<PII_ENCRYPTED_{kind}_{len(self._token_by_value) + 1}>"
             self._token_by_value[key] = token
-            self._value_by_token[token] = value
+            self._encrypted_by_token[token] = self._cipher.encrypt(value.encode("utf-8"))
         return token

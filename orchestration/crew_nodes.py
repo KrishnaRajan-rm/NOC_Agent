@@ -292,9 +292,9 @@ def run_customer_comms_crew(
                         f"{user_query}\n{agent_context}"
                     )
                     pii_audit["output"] = (
-                        "PII Layer ACTIVE: masked "
+                        "PII Layer ACTIVE: Fernet-encrypted "
                         f"{detected} before external LLM; tower IDs and names preserved; "
-                        "restored after final response."
+                        "decrypted after final response."
                     )
                 return pii_protector.restore(output_text)
         except Exception as exc:

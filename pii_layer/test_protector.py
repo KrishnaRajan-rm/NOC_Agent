@@ -18,6 +18,8 @@ class PIIProtectorTests(unittest.TestCase):
         self.assertNotIn("CUST-10002", protected)
         self.assertNotIn("alex@example.com", protected)
         self.assertNotIn("555-0100", protected)
+        self.assertIn("<PII_ENCRYPTED_", protected)
+        self.assertTrue(protector._encrypted_by_token)
         self.assertEqual(protector.restore(protected), source)
 
     def test_reuses_tokens_for_repeated_values(self):
@@ -25,7 +27,7 @@ class PIIProtectorTests(unittest.TestCase):
 
         protected = protector.protect("CUST-10002 contacted CUST-10002.")
 
-        self.assertEqual(protected.count("<PII_CUSTOMER_ID_1>"), 2)
+        self.assertEqual(protected.count("<PII_ENCRYPTED_CUSTOMER_ID_1>"), 2)
 
 
 if __name__ == "__main__":
