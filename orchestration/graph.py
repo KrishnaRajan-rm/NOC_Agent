@@ -271,16 +271,27 @@ def customer_comms_crew_node(state: AgentState) -> dict:
     agent_context = state.get("agent_context", "")
     logger.info("Executing CustomerCommsCrew worker...")
 
-    final_text = run_customer_comms_crew(user_query=user_query, agent_context=agent_context)
+    pii_audit: dict[str, str] = {}
+    final_text = run_customer_comms_crew(
+        user_query=user_query,
+        agent_context=agent_context,
+        pii_audit=pii_audit,
+    )
 
     trace_entry = {
         "worker": "CustomerCommsCrew",
         "output": final_text,
     }
+    trace_entries = state.get("execution_trace", []) + [trace_entry]
+    if pii_audit.get("output"):
+        trace_entries.append({
+            "worker": "PIILayer",
+            "output": pii_audit["output"],
+        })
 
     return {
         "final_response": final_text,
-        "execution_trace": state.get("execution_trace", []) + [trace_entry],
+        "execution_trace": trace_entries,
         "messages": [AIMessage(content=f"[CustomerCommsCrew]: {final_text}")],
     }
 

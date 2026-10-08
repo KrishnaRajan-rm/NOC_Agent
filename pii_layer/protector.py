@@ -36,6 +36,15 @@ class PIIProtector:
             restored = restored.replace(token, value)
         return restored
 
+    def audit_summary(self, text: str) -> str:
+        """Describe detected PII categories without exposing their values."""
+        masked_categories = []
+        for kind, pattern in self._patterns:
+            count = len(pattern.findall(text))
+            if count:
+                masked_categories.append(f"{kind} x{count}")
+        return ", ".join(masked_categories) if masked_categories else "none detected"
+
     def _token(self, kind: str, value: str) -> str:
         key = (kind, value)
         token = self._token_by_value.get(key)

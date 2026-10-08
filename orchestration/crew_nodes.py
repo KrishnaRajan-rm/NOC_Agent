@@ -262,7 +262,11 @@ def _is_openrouter_operational() -> bool:
         return False
 
 
-def run_customer_comms_crew(user_query: str, agent_context: str) -> str:
+def run_customer_comms_crew(
+    user_query: str,
+    agent_context: str,
+    pii_audit: Optional[dict[str, str]] = None,
+) -> str:
     """Execute the Customer Communications Crew to produce the final customer response.
 
     Exposed to the LangGraph CustomerCommsCrew node.
@@ -283,9 +287,24 @@ def run_customer_comms_crew(user_query: str, agent_context: str) -> str:
             result = crew.kickoff()
             output_text = _clean_text(str(result))
             if output_text and len(output_text) > 30 and "error" not in output_text.lower():
+                if pii_audit is not None:
+                    detected = pii_protector.audit_summary(
+                        f"{user_query}\n{agent_context}"
+                    )
+                    pii_audit["output"] = (
+                        "PII Layer ACTIVE: masked "
+                        f"{detected} before external LLM; tower IDs and names preserved; "
+                        "restored after final response."
+                    )
                 return pii_protector.restore(output_text)
         except Exception as exc:
             logger.info(f"CrewAI execution note: {exc}; utilizing communications synthesizer.")
+
+    if pii_audit is not None and "output" not in pii_audit:
+        pii_audit["output"] = (
+            "PII Layer BYPASSED: external LLM unavailable; local response synthesizer used, "
+            "so customer data was not sent outside the application."
+        )
 
     # Fallback to intelligent telecom communications synthesizer
     return _synthesize_telecom_response(user_query, agent_context)

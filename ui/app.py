@@ -989,6 +989,7 @@ with tab_console:
                     "NetworkDiagnosticsADK": "Google ADK Microservice (Port 8001 / SQLite)",
                     "BillingResolutionADK": "Google ADK Microservice (Port 8002 / SQLite)",
                     "CustomerCommsCrew": "CrewAI Sequential Crew (Drafter + Reviewer)",
+                    "PIILayer": "Reversible PII Masking & Restoration",
                 }
 
                 for idx, step in enumerate(execution_trace, 1):
