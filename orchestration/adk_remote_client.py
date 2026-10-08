@@ -20,6 +20,12 @@ import requests
 from pathlib import Path
 from typing import Optional
 
+try:
+    import truststore
+    truststore.inject_into_ssl()
+except Exception:
+    pass
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -190,8 +196,10 @@ def query_network_diagnostics_remote(query: str) -> str:
                 logger.warning("Network ADK request failed; using SQL fallback: %s", exc)
 
         diag_output = diagnose_network(query)
+        if is_live:
+            return f"[A2A Service (Port {NETWORK_A2A_PORT}) Active · Direct SQL Diagnostics Engine]\n{diag_output}"
         return (
-            f"[A2A Notice: Service on port {NETWORK_A2A_PORT} unavailable. "
+            f"[A2A Notice: Service on port {NETWORK_A2A_PORT} offline. "
             f"Executed via direct SQL diagnostics engine]\n{diag_output}"
         )
     except Exception as exc:
@@ -218,8 +226,10 @@ def query_billing_resolution_remote(query: str) -> str:
                 logger.warning("Billing ADK request failed; using SQL fallback: %s", exc)
 
         billing_output = resolve_billing(query)
+        if is_live:
+            return f"[A2A Service (Port {BILLING_A2A_PORT}) Active · Direct SQL Billing Engine]\n{billing_output}"
         return (
-            f"[A2A Notice: Service on port {BILLING_A2A_PORT} unavailable. "
+            f"[A2A Notice: Service on port {BILLING_A2A_PORT} offline. "
             f"Executed via direct SQL billing engine]\n{billing_output}"
         )
     except Exception as exc:

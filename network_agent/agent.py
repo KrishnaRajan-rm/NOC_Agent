@@ -13,9 +13,16 @@ Implements Section 6.3 of the Prodapt AI Operations Center specification:
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 from typing import Any
+
+try:
+    import truststore
+    truststore.inject_into_ssl()
+except Exception:
+    pass
 
 # Ensure prodapt-project is on path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -97,6 +104,7 @@ def create_network_agent() -> adk.Agent:
         name="network_diagnostics",
         description="Prodapt Network Diagnostics agent for analyzing tower status, telemetry, and NOC incidents.",
         instruction=NOC_INSTRUCTION,
+        model=os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest"),
         tools=[
             check_tower_status_tool,
             run_connectivity_diagnostics_tool,

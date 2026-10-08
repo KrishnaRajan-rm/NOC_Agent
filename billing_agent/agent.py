@@ -13,9 +13,16 @@ Implements Section 6.4 of the Prodapt AI Operations Center specification:
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 from typing import Any, Optional
+
+try:
+    import truststore
+    truststore.inject_into_ssl()
+except Exception:
+    pass
 
 # Ensure prodapt-project is on path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -107,6 +114,7 @@ def create_billing_agent() -> adk.Agent:
         name="billing_resolution",
         description="Prodapt Billing Resolution agent for auditing charges, checking duplicates, and applying credits.",
         instruction=BILLING_INSTRUCTION,
+        model=os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest"),
         tools=[
             lookup_billing_account_tool,
             check_duplicate_charges_tool,

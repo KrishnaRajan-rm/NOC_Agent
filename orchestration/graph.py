@@ -95,14 +95,15 @@ def classify_intent(query: str, executed_workers: set[str]) -> WorkerNode:
     # Scenario 4 & Billing Inquiries: BillingResolutionADK
     # Signals: CUST- prefix, charged twice, double-charge, dispute, balance, credit, plan fee
     # ---------------------------------------------------------
-    is_cust_id = bool(re.search(r"\bcust-\d{5}\b", q_lower))
+    is_cust_id = bool(re.search(r"\b(?:cust|customer|acct|account)?[-_\s#:]*\d{5}\b", q_lower))
+    is_pure_policy = any(p in q_lower for p in ["policy", "faq", "terms", "rules", "guidelines", "handbook"]) and not is_cust_id and not any(w in q_lower for w in ["alex romero", "investigate", "apply credit", "twice", "charged twice", "duplicate", "dispute"])
     billing_signals = [
         "charge", "charged", "bill", "billing", "dispute", "duplicate",
         "twice", "double", "credit", "balance", "travel pass zone c",
         "alex romero", "maya chen", "derek holt", "chris dalton",
         "sofia alvarez", "victor almeida", "grace kim", "ben carter",
     ]
-    if (is_cust_id or any(s in q_lower for s in billing_signals)) and not is_outage_fact:
+    if (is_cust_id or any(s in q_lower for s in billing_signals)) and not is_outage_fact and not is_pure_policy:
         if "BillingResolutionADK" not in executed_workers:
             return "BillingResolutionADK"
         return "CustomerCommsCrew"
