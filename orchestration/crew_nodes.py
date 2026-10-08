@@ -28,7 +28,7 @@ load_dotenv(PROJECT_ROOT / ".env")
 from crewai import Agent, Crew, Process, Task, LLM
 from openai import AsyncOpenAI, OpenAI
 
-from orchestration.pii import PIIProtector
+from pii_layer import PIIProtector
 
 logger = logging.getLogger(__name__)
 

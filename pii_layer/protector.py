@@ -1,4 +1,4 @@
-"""Reversible masking for common customer identifiers at external LLM boundaries."""
+"""Reversible masking for customer PII at external LLM boundaries."""
 
 from __future__ import annotations
 
@@ -6,7 +6,11 @@ import re
 
 
 class PIIProtector:
-    """Mask and restore PII for one request without sharing state across requests."""
+    """Mask and restore customer PII for one request.
+
+    Operational network identifiers such as tower IDs and tower names are
+    intentionally not matched, so diagnostic agents retain useful context.
+    """
 
     _patterns = (
         ("EMAIL", re.compile(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", re.IGNORECASE)),
@@ -19,7 +23,7 @@ class PIIProtector:
         self._value_by_token: dict[str, str] = {}
 
     def protect(self, text: str) -> str:
-        """Replace detected PII with stable request-local tokens."""
+        """Replace detected customer PII with request-local tokens."""
         protected = text
         for kind, pattern in self._patterns:
             protected = pattern.sub(lambda match: self._token(kind, match.group(0)), protected)

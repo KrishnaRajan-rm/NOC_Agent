@@ -1,15 +1,20 @@
 import unittest
 
-from .pii import PIIProtector
+from .protector import PIIProtector
 
 
 class PIIProtectorTests(unittest.TestCase):
-    def test_masks_and_restores_common_customer_identifiers(self):
+    def test_masks_customer_identifiers_but_keeps_tower_context(self):
         protector = PIIProtector()
-        source = "CUST-10002 can be reached at alex@example.com or +1 (512) 555-0100."
+        source = (
+            "Diagnose tower TX-512 at Austin Riverside for CUST-10002, "
+            "alex@example.com, or +1 (512) 555-0100."
+        )
 
         protected = protector.protect(source)
 
+        self.assertIn("TX-512", protected)
+        self.assertIn("Austin Riverside", protected)
         self.assertNotIn("CUST-10002", protected)
         self.assertNotIn("alex@example.com", protected)
         self.assertNotIn("555-0100", protected)
