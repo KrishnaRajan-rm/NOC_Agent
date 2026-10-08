@@ -189,7 +189,7 @@ def policy_rag_node(state: AgentState) -> dict:
 
     trace_entry = {
         "worker": "PolicyRAG",
-        "output": result_text[:500],
+        "output": result_text,
     }
 
     return {
@@ -211,7 +211,7 @@ def network_analytics_node(state: AgentState) -> dict:
 
     trace_entry = {
         "worker": "NetworkAnalytics",
-        "output": result_text[:500],
+        "output": result_text,
     }
 
     return {
@@ -233,7 +233,7 @@ def network_diagnostics_adk_node(state: AgentState) -> dict:
 
     trace_entry = {
         "worker": "NetworkDiagnosticsADK",
-        "output": result_text[:500],
+        "output": result_text,
     }
 
     return {
@@ -255,7 +255,7 @@ def billing_resolution_adk_node(state: AgentState) -> dict:
 
     trace_entry = {
         "worker": "BillingResolutionADK",
-        "output": result_text[:500],
+        "output": result_text,
     }
 
     return {
@@ -275,7 +275,7 @@ def customer_comms_crew_node(state: AgentState) -> dict:
 
     trace_entry = {
         "worker": "CustomerCommsCrew",
-        "output": final_text[:500],
+        "output": final_text,
     }
 
     return {
