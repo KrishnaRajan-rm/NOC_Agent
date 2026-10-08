@@ -183,12 +183,33 @@ SQLQuery: """
 # 4. HUGGING FACE EMBEDDINGS (BGE-SMALL-EN)
 # ============================================================
 
+_sql_local_model = None
+
+def _get_sql_local_model():
+    global _sql_local_model
+    if _sql_local_model is None:
+        try:
+            import truststore
+            truststore.inject_into_ssl()
+        except Exception:
+            pass
+        from sentence_transformers import SentenceTransformer
+        _sql_local_model = SentenceTransformer("BAAI/bge-small-en-v1.5")
+    return _sql_local_model
+
+
 class HuggingFaceAPIEmbedding(BaseEmbedding):
-    """Create BGE embeddings through Hugging Face inference endpoint."""
+    """Create BGE embeddings through Hugging Face inference endpoint or local SentenceTransformer."""
 
     model_name: str = "BAAI/bge-small-en-v1.5"
 
     def _get_embedding(self, text: str) -> list[float]:
+        try:
+            model = _get_sql_local_model()
+            return model.encode(text).tolist()
+        except Exception:
+            pass
+
         hf_token = os.getenv("HF_TOKEN")
         if not hf_token:
             raise RuntimeError("HF_TOKEN is required in .env for embeddings.")

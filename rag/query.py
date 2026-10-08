@@ -41,8 +41,32 @@ CHROMA_DIR = (
 # 3. Create query embedding
 # --------------------------------------------------
 
-def create_embedding(text):
+_local_embedding_model = None
 
+
+def _get_local_embedding_model():
+    global _local_embedding_model
+    if _local_embedding_model is None:
+        try:
+            import truststore
+            truststore.inject_into_ssl()
+        except Exception:
+            pass
+        from sentence_transformers import SentenceTransformer
+        _local_embedding_model = SentenceTransformer("BAAI/bge-small-en-v1.5")
+    return _local_embedding_model
+
+
+def create_embedding(text):
+    # Try local SentenceTransformer first for speed, reliability, and to avoid 402 credit limits
+    try:
+        model = _get_local_embedding_model()
+        emb = model.encode(text)
+        return emb.tolist()
+    except Exception:
+        pass
+
+    # Remote Hugging Face API fallback
     url = (
         "https://router.huggingface.co/"
         "hf-inference/models/"

@@ -40,6 +40,7 @@ from orchestration.adk_remote_client import (
     query_network_diagnostics_remote,
 )
 from orchestration.crew_nodes import run_customer_comms_crew
+from orchestration.evaluation import evaluate_query_confidence, run_judge_check
 from rag.query import get_collection
 from rag.llm import rag_query
 from sql_agent.semantic_search import ask_sql
@@ -48,17 +49,30 @@ logger = logging.getLogger(__name__)
 
 _rag_collection = None
 
-def ask_policy(user_query: str) -> str:
-    """Query policy documents using the project's ChromaDB RAG module."""
+def ask_policy_with_metadata(user_query: str) -> tuple[str, dict[str, Any]]:
+    """Query policy documents using the project's ChromaDB RAG module and capture real metadata."""
     global _rag_collection
     try:
         if _rag_collection is None:
             _rag_collection = get_collection()
-        answer, _ = rag_query(_rag_collection, user_query)
-        return answer
+        answer, results = rag_query(_rag_collection, user_query)
+        distances = (results.get("distances") or [[]])[0]
+        documents = (results.get("documents") or [[]])[0]
+        top_dist = distances[0] if distances else None
+        meta = {
+            "top_distance": top_dist,
+            "distances": distances,
+            "chunks_count": len(documents),
+        }
+        return answer, meta
     except Exception as exc:
         logger.error(f"Policy RAG execution error: {exc}")
-        return f"Policy RAG could not retrieve documents: {exc}"
+        return f"Policy RAG could not retrieve documents: {exc}", {"error": str(exc), "chunks_count": 0}
+
+def ask_policy(user_query: str) -> str:
+    """Query policy documents using the project's ChromaDB RAG module."""
+    ans, _ = ask_policy_with_metadata(user_query)
+    return ans
 
 
 
@@ -182,7 +196,7 @@ def policy_rag_node(state: AgentState) -> dict:
     user_query = state.get("user_query", "")
     logger.info("Executing PolicyRAG worker...")
 
-    result_text = ask_policy(user_query)
+    result_text, meta = ask_policy_with_metadata(user_query)
 
     curr_ctx = state.get("agent_context", "")
     new_ctx = f"{curr_ctx}\n\n[PolicyRAG Findings]:\n{result_text}".strip()
@@ -190,6 +204,7 @@ def policy_rag_node(state: AgentState) -> dict:
     trace_entry = {
         "worker": "PolicyRAG",
         "output": result_text,
+        "metadata": meta,
     }
 
     return {
@@ -209,9 +224,17 @@ def network_analytics_node(state: AgentState) -> dict:
     curr_ctx = state.get("agent_context", "")
     new_ctx = f"{curr_ctx}\n\n[NetworkAnalytics Findings]:\n{result_text}".strip()
 
+    has_rows = bool(
+        result_text
+        and "0 rows" not in result_text.lower()
+        and "no results found" not in result_text.lower()
+        and not result_text.lower().startswith("error")
+    )
+
     trace_entry = {
         "worker": "NetworkAnalytics",
         "output": result_text,
+        "metadata": {"sql_rows_returned": has_rows},
     }
 
     return {
@@ -231,9 +254,17 @@ def network_diagnostics_adk_node(state: AgentState) -> dict:
     curr_ctx = state.get("agent_context", "")
     new_ctx = f"{curr_ctx}\n\n[NetworkDiagnosticsADK Findings]:\n{result_text}".strip()
 
+    has_rows = bool(
+        result_text
+        and "not found" not in result_text.lower()
+        and "was not found" not in result_text.lower()
+        and not result_text.lower().startswith("error")
+    )
+
     trace_entry = {
         "worker": "NetworkDiagnosticsADK",
         "output": result_text,
+        "metadata": {"sql_rows_returned": has_rows},
     }
 
     return {
@@ -253,9 +284,18 @@ def billing_resolution_adk_node(state: AgentState) -> dict:
     curr_ctx = state.get("agent_context", "")
     new_ctx = f"{curr_ctx}\n\n[BillingResolutionADK Findings]:\n{result_text}".strip()
 
+    has_rows = bool(
+        result_text
+        and "not found" not in result_text.lower()
+        and "was not found" not in result_text.lower()
+        and "no account found" not in result_text.lower()
+        and not result_text.lower().startswith("error")
+    )
+
     trace_entry = {
         "worker": "BillingResolutionADK",
         "output": result_text,
+        "metadata": {"sql_rows_returned": has_rows},
     }
 
     return {
@@ -373,10 +413,30 @@ def run_telecom_assistant(user_query: str) -> dict[str, Any]:
             # Fallback to agent context if final_response was not populated
             final_response = final_state.get("agent_context", "Inquiry processed successfully.")
 
+        execution_trace = final_state.get("execution_trace", [])
+        agent_context = final_state.get("agent_context", "")
+
+        # Real-signal confidence scoring and deterministic financial judge check
+        eval_result = evaluate_query_confidence(
+            user_query=user_query,
+            execution_trace=execution_trace,
+            agent_context=agent_context,
+            final_response=final_response,
+        )
+
         return {
             "final_response": final_response,
-            "execution_trace": final_state.get("execution_trace", []),
-            "agent_context": final_state.get("agent_context", ""),
+            "execution_trace": execution_trace,
+            "agent_context": agent_context,
+            "confidence_score": eval_result["confidence_score"],
+            "confidence_percent": eval_result["confidence_percent"],
+            "confidence_level": eval_result["confidence_level"],
+            "confidence_status": eval_result["confidence_status"],
+            "needs_human_review": eval_result["needs_human_review"],
+            "review_reasons": eval_result["review_reasons"],
+            "grounding_type": eval_result["grounding_type"],
+            "signals": eval_result["signals"],
+            "judge_check": eval_result["judge_check"],
         }
     except Exception as exc:
         logger.error(f"Error executing telecom assistant: {exc}", exc_info=True)
@@ -384,6 +444,30 @@ def run_telecom_assistant(user_query: str) -> dict[str, Any]:
             "final_response": f"An error occurred while processing your request: {exc}",
             "execution_trace": [{"worker": "Error", "output": str(exc)}],
             "agent_context": str(exc),
+            "confidence_score": 0.10,
+            "confidence_percent": 10,
+            "confidence_level": "LOW",
+            "confidence_status": "Needs Human Review",
+            "needs_human_review": True,
+            "review_reasons": [f"Execution error: {exc}"],
+            "grounding_type": "Error Handler",
+            "signals": {
+                "retrieval_similarity": None,
+                "retrieval_similarity_pct": None,
+                "sql_rows_signal": 0.0,
+                "sql_rows_returned": False,
+                "sql_records_found": 0,
+                "grounding_score": 0.1,
+                "judge_passed": False,
+            },
+            "judge_check": {
+                "passed": False,
+                "response_amounts": [],
+                "retrieved_amounts": [],
+                "matched_amounts": [],
+                "unverified_amounts": [],
+                "details": f"Execution halted due to system error: {exc}",
+            },
         }
 
 

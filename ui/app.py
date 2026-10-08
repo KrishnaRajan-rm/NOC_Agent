@@ -26,9 +26,12 @@ Implements Section 6.8, 6.8.1, 6.8.2, 6.8.3, and 6.8.4 of the project specificat
 from __future__ import annotations
 
 import datetime
+import html
 import random
+import re
 import sqlite3
 import sys
+import textwrap
 import warnings
 from pathlib import Path
 
@@ -46,6 +49,7 @@ import pydeck as pdk
 import streamlit as st
 
 from orchestration.graph import run_telecom_assistant
+from orchestration.evaluation import evaluate_query_confidence
 from orchestration.adk_remote_client import (
     NETWORK_A2A_PORT,
     BILLING_A2A_PORT,
@@ -147,21 +151,23 @@ st.markdown(
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 8px;
-        padding: 9px 16px;
+        padding: 7px 12px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 12px;
-        font-size: 0.82rem;
+        flex-wrap: nowrap;
+        gap: 6px;
+        font-size: 0.72rem;
         min-height: 42px;
         box-sizing: border-box;
+        overflow-x: auto;
     }
     .rt-status-left {
         display: flex;
         align-items: center;
-        gap: 14px;
-        flex-wrap: wrap;
+        gap: 8px;
+        flex-wrap: nowrap;
+        min-width: max-content;
     }
     .rt-status-pill {
         display: inline-flex;
@@ -183,6 +189,18 @@ st.markdown(
         0% { transform: scale(0.95); opacity: 0.8; }
         50% { transform: scale(1.15); opacity: 1; }
         100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    /* Keep dashboard metrics compact and scannable. */
+    [data-testid="stMetricLabel"] {
+        font-size: 0.82rem !important;
+    }
+    [data-testid="stMetricValue"] {
+        font-size: 2.05rem !important;
+        line-height: 1.1 !important;
+    }
+    [data-testid="stMetricDelta"] {
+        font-size: 0.78rem !important;
     }
 
     /* Scenario Cards Grid - Strictly Equal Heights to Prevent Misalignment */
@@ -306,10 +324,45 @@ st.markdown(
         font-weight: 700;
     }
     .response-body {
-        font-size: 1.01rem;
-        line-height: 1.7;
+        font-size: 0.88rem;
+        line-height: 1.6;
         color: #1e293b;
-        white-space: pre-wrap;
+        white-space: normal;
+    }
+    .response-body p {
+        margin: 0 0 0.9rem 0;
+    }
+    .response-body p:last-child {
+        margin-bottom: 0;
+    }
+    .response-body h1,
+    .response-body h2,
+    .response-body h3,
+    .response-body h4 {
+        line-height: 1.25;
+        margin: 1rem 0 0.5rem 0;
+    }
+    .response-body h1:first-child,
+    .response-body h2:first-child,
+    .response-body h3:first-child,
+    .response-body h4:first-child {
+        margin-top: 0;
+    }
+    .response-body ul,
+    .response-body ol {
+        margin: 0.35rem 0 0.9rem 1.35rem;
+        padding: 0;
+    }
+    .response-body table {
+        border-collapse: collapse;
+        margin: 0.75rem 0 1rem 0;
+        font-size: 0.84rem;
+    }
+    .response-body th,
+    .response-body td {
+        padding: 0.45rem 0.65rem;
+        border: 1px solid #e2e8f0;
+        text-align: left;
     }
 
     /* Trace Timeline Steps */
@@ -364,8 +417,33 @@ st.markdown(
         border-radius: 6px;
         border: 1px solid #e2e8f0;
         font-family: Consolas, "SF Mono", Monaco, Menlo, monospace;
-        white-space: pre-wrap;
         word-break: break-word;
+    }
+    .trace-output p {
+        margin: 0 0 0.65rem 0;
+    }
+    .trace-output p:last-child {
+        margin-bottom: 0;
+    }
+    .trace-output h4 {
+        margin: 0.25rem 0 0.45rem 0;
+        color: #0f172a;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 0.86rem;
+    }
+    .trace-output ul,
+    .trace-output ol {
+        margin: 0.25rem 0 0.65rem 1.25rem;
+        padding: 0;
+    }
+    .trace-output li {
+        margin: 0.2rem 0;
+    }
+    .trace-output code {
+        padding: 1px 4px;
+        border-radius: 3px;
+        background: #e2e8f0;
+        color: #0f172a;
     }
 
     /* Route Path Stepper */
@@ -420,6 +498,173 @@ st.markdown(
         margin-right: 6px;
     }
 
+    /* Confidence Score & Financial Judge Check Card */
+    .eval-card {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-top: 4px solid #0f172a;
+        border-radius: 10px;
+        padding: 18px 20px 20px 20px;
+        margin: 14px 0 16px 0;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    }
+    .eval-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 12px;
+    }
+    .eval-judge-summary {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        color: #334155;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        margin: 8px 0 12px 0;
+    }
+    .eval-judge-summary strong {
+        color: #0f172a;
+        white-space: nowrap;
+    }
+    .eval-score-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0f172a;
+        color: #ffffff;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-weight: 800;
+        font-size: 0.88rem;
+    }
+    .eval-judge-pass {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #f0fdf4;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+    .eval-judge-fail {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+    .eval-review-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fffbeb;
+        color: #92400e;
+        border: 1px solid #fde68a;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+    .eval-approved-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #f1f5f9;
+        color: #0f172a;
+        border: 1px solid #cbd5e1;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+    .eval-signals-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+        font-size: 0.82rem;
+    }
+    .eval-signal-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 8px 12px;
+    }
+    .eval-signal-label {
+        font-size: 0.70rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 2px;
+    }
+    .eval-signal-val {
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 0.85rem;
+    }
+    .eval-evidence {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 11px 13px;
+        margin: 10px 0 12px 0;
+        color: #334155;
+        font-size: 0.80rem;
+        line-height: 1.55;
+    }
+    .eval-evidence-title {
+        color: #64748b;
+        font-size: 0.70rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+    .eval-evidence-row {
+        padding: 2px 0;
+    }
+    .eval-evidence-row strong {
+        color: #0f172a;
+    }
+    @media (max-width: 950px) {
+        .eval-signals-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    @media (max-width: 600px) {
+        .eval-signals-grid {
+            grid-template-columns: 1fr;
+        }
+        .eval-judge-summary {
+            display: block;
+        }
+        .eval-judge-summary strong {
+            display: block;
+            margin-bottom: 2px;
+        }
+    }
+
     /* Solid Dark Button Styling (Strictly no gradients, no emojis) */
     div.stButton > button[kind="primary"] {
         background: #0f172a !important;
@@ -451,6 +696,58 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+
+# ============================================================
+# 1.1 TRACE OUTPUT FORMATTING
+# ============================================================
+
+def format_trace_output(output_text: str) -> str:
+    """Render worker Markdown-like output compactly inside the trace card."""
+    rendered_lines: list[str] = []
+    list_type: str | None = None
+
+    def format_inline(text: str) -> str:
+        formatted = html.escape(text)
+        formatted = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", formatted)
+        return re.sub(r"`([^`]+)`", r"<code>\1</code>", formatted)
+
+    def close_list() -> None:
+        nonlocal list_type
+        if list_type:
+            rendered_lines.append(f"</{list_type}>")
+            list_type = None
+
+    for raw_line in output_text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+
+        heading_match = re.match(r"^#{1,6}\s+(.+)$", line)
+        bullet_match = re.match(r"^[-*•]\s+(.+)$", line)
+        numbered_match = re.match(r"^\d+[.)]\s+(.+)$", line)
+
+        if heading_match:
+            close_list()
+            rendered_lines.append(f"<h4>{format_inline(heading_match.group(1))}</h4>")
+        elif bullet_match:
+            if list_type != "ul":
+                close_list()
+                rendered_lines.append("<ul>")
+                list_type = "ul"
+            rendered_lines.append(f"<li>{format_inline(bullet_match.group(1))}</li>")
+        elif numbered_match:
+            if list_type != "ol":
+                close_list()
+                rendered_lines.append("<ol>")
+                list_type = "ol"
+            rendered_lines.append(f"<li>{format_inline(numbered_match.group(1))}</li>")
+        else:
+            close_list()
+            rendered_lines.append(f"<p>{format_inline(line)}</p>")
+
+    close_list()
+    return "".join(rendered_lines)
 
 
 # ============================================================
@@ -598,7 +895,7 @@ with st.sidebar:
         f'<div class="status-indicator">'
         f'<span><strong>Network ADK ({NETWORK_A2A_PORT})</strong></span>'
         f'<span><span class="{"dot-online" if net_online else "dot-offline"}"></span>'
-        f'{"Online" if net_online else "Direct SQL"}</span>'
+        f'{"Active / Online" if net_online else "Inactive (Direct SQL Fallback)"}</span>'
         f'</div>',
         unsafe_allow_html=True,
     )
@@ -607,7 +904,7 @@ with st.sidebar:
         f'<div class="status-indicator">'
         f'<span><strong>Billing ADK ({BILLING_A2A_PORT})</strong></span>'
         f'<span><span class="{"dot-online" if bill_online else "dot-offline"}"></span>'
-        f'{"Online" if bill_online else "Direct SQL"}</span>'
+        f'{"Active / Online" if bill_online else "Inactive (Direct SQL Fallback)"}</span>'
         f'</div>',
         unsafe_allow_html=True,
     )
@@ -664,8 +961,11 @@ with st.sidebar:
 # ============================================================
 
 # Solid Dark Slate Header (No blue-green gradients)
+net_badge_style = "border-color: #059669; color: #a7f3d0;" if net_online else "border-color: #475569; color: #94a3b8;"
+bill_badge_style = "border-color: #059669; color: #a7f3d0;" if bill_online else "border-color: #475569; color: #94a3b8;"
+
 st.markdown(
-    """
+    f"""
     <div class="header-card">
         <div class="header-left">
             <div class="header-pill">
@@ -678,7 +978,14 @@ st.markdown(
                 <span class="badge">LangGraph Supervisor</span>
                 <span class="badge">ChromaDB Policy RAG</span>
                 <span class="badge">SQLite Semantic SQL</span>
-                <span class="badge">Google ADK A2A (8001 & 8002)</span>
+                <span class="badge" style="{net_badge_style}">
+                    <span class="{"dot-online" if net_online else "dot-offline"}"></span>
+                    Network Agent ({NETWORK_A2A_PORT}): {"Active" if net_online else "Inactive"}
+                </span>
+                <span class="badge" style="{bill_badge_style}">
+                    <span class="{"dot-online" if bill_online else "dot-offline"}"></span>
+                    Billing Agent ({BILLING_A2A_PORT}): {"Active" if bill_online else "Inactive"}
+                </span>
                 <span class="badge">CrewAI Comms Crew</span>
             </div>
         </div>
@@ -698,26 +1005,30 @@ st.markdown(
 # Real-Time Telemetry Status Toolbar (Properly Aligned)
 current_timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-col_status, col_btn = st.columns([8.2, 1.8])
-with col_status:
-    st.markdown(
-        f"""
-        <div class="rt-status-bar">
-            <div class="rt-status-left">
-                <span class="rt-status-pill"><span class="rt-dot-live"></span> Live Telemetry Pipeline</span>
-                <span style="color: #cbd5e1;">|</span>
-                <span>Active Database: <strong>telecom_ops.db</strong></span>
-                <span style="color: #cbd5e1;">|</span>
-                <span>Last Synchronized: <strong>{current_timestamp}</strong></span>
-            </div>
+st.markdown(
+    f"""
+    <div class="rt-status-bar">
+        <div class="rt-status-left">
+            <span class="rt-status-pill"><span class="rt-dot-live"></span> Live Telemetry Pipeline</span>
+            <span style="color: #cbd5e1;">|</span>
+            <span>Active Database: <strong>telecom_ops.db</strong></span>
+            <span style="color: #cbd5e1;">|</span>
+            <span class="rt-status-pill">
+                <span class="{"rt-dot-live" if net_online else "dot-offline"}"></span>
+                Network Agent: <strong>{"Active (Port " + str(NETWORK_A2A_PORT) + ")" if net_online else "Offline (Direct SQL Fallback)"}</strong>
+            </span>
+            <span style="color: #cbd5e1;">|</span>
+            <span class="rt-status-pill">
+                <span class="{"rt-dot-live" if bill_online else "dot-offline"}"></span>
+                Billing Agent: <strong>{"Active (Port " + str(BILLING_A2A_PORT) + ")" if bill_online else "Offline (Direct SQL Fallback)"}</strong>
+            </span>
+            <span style="color: #cbd5e1;">|</span>
+            <span>Last Synchronized: <strong>{current_timestamp}</strong></span>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
-with col_btn:
-    if st.button("Refresh Telemetry", use_container_width=True):
-        st.cache_data.clear()
-        st.rerun()
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
 
@@ -946,13 +1257,124 @@ with tab_console:
         execution_trace = res.get("execution_trace", [])
         agent_context = res.get("agent_context", "")
 
-        # 1. Final Customer Response Card
+        # Rebuild evaluation data for results created before the confidence contract
+        # was added, or for a long-lived Streamlit session holding an older result.
+        if not all(key in res for key in ("confidence_percent", "signals", "judge_check")):
+            recovered_eval = evaluate_query_confidence(
+                user_query=st.session_state.get("last_query", ""),
+                execution_trace=execution_trace,
+                agent_context=agent_context,
+                final_response=final_response,
+            )
+            res = {**res, **recovered_eval}
+            st.session_state["last_result"] = res
+
+        # 1. Deterministic Confidence Score & Financial Judge Check (Shown Together)
+        conf_pct = res.get("confidence_percent")
+        if conf_pct is None:
+            conf_pct = int((res.get("confidence_score") or 0.0) * 100)
+        conf_level = res.get("confidence_level", "UNKNOWN" if conf_pct == 0 else ("HIGH" if conf_pct >= 85 else "MEDIUM" if conf_pct >= 70 else "LOW"))
+        conf_status = res.get("confidence_status", "Needs Human Review")
+        needs_review = res.get("needs_human_review", conf_pct < 70)
+        review_reasons = res.get("review_reasons", [])
+        grounding_type = res.get("grounding_type", "Operational Database Grounding")
+        signals = res.get("signals", {})
+        judge = res.get("judge_check", {})
+
+        judge_passed = judge.get("passed", False)
+        judge_details = judge.get("details", "No financial grounding evidence was returned.")
+
+        score_dot = '<span class="dot-online"></span>' if not needs_review else '<span class="dot-offline"></span>'
+        status_badge_class = "eval-review-badge" if needs_review else "eval-approved-badge"
+        status_badge_text = "Needs Human Review" if needs_review else "Autonomous Resolution Approved"
+        judge_badge_class = "eval-judge-pass" if judge_passed else "eval-judge-fail"
+        judge_badge_text = "Judge Check: PASSED" if judge_passed else "Judge Check: FAILED"
+
+        retrieval_sim = signals.get("retrieval_similarity_pct")
+        sql_rows = signals.get("sql_rows_returned")
+        sql_records_found = signals.get("sql_records_found", 0)
+        grounding_score = signals.get("grounding_score")
+
+        response_amounts = judge.get("response_amounts", [])
+        retrieved_amounts = judge.get("retrieved_amounts", [])
+        matched_amounts = judge.get("matched_amounts", [])
+        unverified_amounts = judge.get("unverified_amounts", [])
+
+        def evidence_text(values: list[str], empty_text: str = "None") -> str:
+            return html.escape(", ".join(values) if values else empty_text)
+
+        retrieval_disp = f"{retrieval_sim}% Semantic Similarity" if retrieval_sim is not None else "N/A (Direct SQL Query)"
+        sql_disp = f"Rows Returned: {sql_records_found} record(s)" if sql_rows else ("0 Rows (Not Found in DB)" if sql_rows is False else "N/A (Document RAG)")
+        grounding_disp = f"{round(float(grounding_score) * 100)}% Entity Match" if grounding_score is not None else "N/A"
+        evidence_status = "Verified" if judge_passed else "Review required"
+
+        review_alert_html = ""
+        if needs_review:
+            reasons_str = "; ".join(review_reasons) if review_reasons else "Confidence score below 70% threshold or ungrounded financial figures detected."
+            review_alert_html = f'<div style="background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; padding: 10px 14px; border-radius: 6px; margin: 10px 0; font-size: 0.85rem; color: #92400e;"><strong>Escalation Alert:</strong> {html.escape(reasons_str)}</div>'
+
+        st.markdown(
+            "\n".join(
+                line.strip()
+                for line in textwrap.dedent(f"""
+            <div class="eval-card">
+                <div class="eval-header">
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <span class="eval-score-pill">
+                            {score_dot} Confidence Score: {conf_pct}% ({conf_level})
+                        </span>
+                        <span class="{status_badge_class}">
+                            {status_badge_text}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="{judge_badge_class}">
+                            {"✔" if judge_passed else "❌"} {judge_badge_text}
+                        </span>
+                    </div>
+                </div>
+                {review_alert_html}
+                <div class="eval-judge-summary">
+                    <strong>Financial Fact-Checking Judge:</strong> {judge_details}
+                </div>
+                <div class="eval-evidence">
+                    <div class="eval-evidence-title">Financial Evidence Trail</div>
+                    <div class="eval-evidence-row"><strong>Status:</strong> {evidence_status}</div>
+                    <div class="eval-evidence-row"><strong>Response figures:</strong> {evidence_text(response_amounts)}</div>
+                    <div class="eval-evidence-row"><strong>Retrieved figures:</strong> {evidence_text(retrieved_amounts)}</div>
+                    <div class="eval-evidence-row"><strong>Matched:</strong> {evidence_text(matched_amounts)} &nbsp; <strong>Unverified:</strong> {evidence_text(unverified_amounts)}</div>
+                </div>
+                <div class="eval-signals-grid">
+                    <div class="eval-signal-box">
+                        <div class="eval-signal-label">Retrieval Similarity (ChromaDB)</div>
+                        <div class="eval-signal-val">{retrieval_disp}</div>
+                    </div>
+                    <div class="eval-signal-box">
+                        <div class="eval-signal-label">SQL Verification (telecom_ops.db)</div>
+                        <div class="eval-signal-val">{sql_disp}</div>
+                    </div>
+                    <div class="eval-signal-box">
+                        <div class="eval-signal-label">Grounding Pipeline</div>
+                        <div class="eval-signal-val">{grounding_type}</div>
+                    </div>
+                    <div class="eval-signal-box">
+                        <div class="eval-signal-label">Entity Grounding</div>
+                        <div class="eval-signal-val">{grounding_disp}</div>
+                    </div>
+                </div>
+            </div>
+            """).splitlines()
+            ),
+            unsafe_allow_html=True,
+        )
+
+        # 2. Final Customer Response Card
         st.markdown(
             f"""
             <div class="response-card">
                 <div class="response-header">
                     <span class="response-badge">Customer-Ready Communication (CrewAI Polished)</span>
-                    <span class="response-seal">SLA & Compliance Verified</span>
+                    <span class="response-seal">{"SLA & Compliance Verified" if not needs_review else "Escalated for Human Review"}</span>
                 </div>
                 <div class="response-body">{final_response}</div>
             </div>
@@ -960,7 +1382,7 @@ with tab_console:
             unsafe_allow_html=True,
         )
 
-        # 2. Mandatory Agent Execution Trace (Expanded by Default)
+        # 3. Mandatory Agent Execution Trace (Expanded by Default)
         with st.expander("Agent Execution Trace (Routing Path & Telemetry)", expanded=True):
             if not execution_trace:
                 st.info("No worker nodes were executed.")
@@ -996,6 +1418,7 @@ with tab_console:
                     worker = step.get("worker", "Worker")
                     output_text = step.get("output", "")
                     tech_desc = tech_labels.get(worker, "Autonomous Specialist Worker")
+                    formatted_output = format_trace_output(output_text)
 
                     st.markdown(
                         f"""
@@ -1006,7 +1429,7 @@ with tab_console:
                                 <span class="trace-tech">[{tech_desc}]</span>
                                 <span class="trace-status">SUCCESS</span>
                             </div>
-                            <div class="trace-output">{output_text}</div>
+                            <div class="trace-output">{formatted_output}</div>
                         </div>
                         """,
                         unsafe_allow_html=True,

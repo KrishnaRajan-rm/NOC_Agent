@@ -44,5 +44,5 @@ class AgentState(TypedDict):
     next: str
     user_query: str
     agent_context: str
-    execution_trace: List[Dict[str, str]]
+    execution_trace: List[Dict[str, Any]]
     final_response: str

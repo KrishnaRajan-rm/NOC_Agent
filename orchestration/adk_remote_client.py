@@ -97,9 +97,18 @@ billing_proxy_agent = adk.Agent(
 # 2. SERVICE HEALTH CHECK
 # ============================================================
 
-def check_service_health(port: int, timeout: float = 1.0) -> bool:
+def check_service_health(port: int, timeout: float = 0.5) -> bool:
     """Check if the A2A service on the specified port is running and responsive."""
-    url = f"http://localhost:{port}/.well-known/agent-card.json"
+    import socket
+    # Fast TCP connection probe (<2ms if offline)
+    try:
+        with socket.create_connection(("127.0.0.1", port), timeout=0.15):
+            pass
+    except (socket.timeout, ConnectionRefusedError, OSError):
+        return False
+
+    # Verify HTTP agent card endpoint if port is active
+    url = f"http://127.0.0.1:{port}/.well-known/agent-card.json"
     try:
         res = requests.get(url, timeout=timeout)
         return res.status_code == 200
