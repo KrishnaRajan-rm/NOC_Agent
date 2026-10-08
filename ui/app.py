@@ -894,10 +894,9 @@ with tab_console:
     # Inquiry Input Area
     query = st.text_area(
         "Customer / Operations Inquiry:",
-        value=st.session_state["query_input"],
         height=95,
         placeholder="Type any inquiry in plain English...\ne.g. 'Can I trade in an iPhone 13?' or 'Diagnose tower FL-090 in Miami' or 'Check CUST-10002 billing charges'",
-        key="text_area_inquiry",
+        key="query_input",
     )
 
     col_submit, col_clear, col_sample, col_spacer = st.columns([1.8, 1.2, 1.8, 4.2])
