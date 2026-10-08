@@ -28,6 +28,8 @@ load_dotenv(PROJECT_ROOT / ".env")
 from crewai import Agent, Crew, Process, Task, LLM
 from openai import AsyncOpenAI, OpenAI
 
+from orchestration.pii import PIIProtector
+
 logger = logging.getLogger(__name__)
 
 
@@ -271,11 +273,17 @@ def run_customer_comms_crew(user_query: str, agent_context: str) -> str:
     # First check if OpenRouter is operational and not rate-limited
     if _is_openrouter_operational():
         try:
-            crew = create_customer_comms_crew(user_query=user_query, agent_context=agent_context)
+            pii_protector = PIIProtector()
+            protected_query = pii_protector.protect(user_query)
+            protected_context = pii_protector.protect(agent_context)
+            crew = create_customer_comms_crew(
+                user_query=protected_query,
+                agent_context=protected_context,
+            )
             result = crew.kickoff()
             output_text = _clean_text(str(result))
             if output_text and len(output_text) > 30 and "error" not in output_text.lower():
-                return output_text
+                return pii_protector.restore(output_text)
         except Exception as exc:
             logger.info(f"CrewAI execution note: {exc}; utilizing communications synthesizer.")
 
