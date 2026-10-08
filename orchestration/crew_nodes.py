@@ -176,10 +176,24 @@ def _synthesize_telecom_response(user_query: str, agent_context: str) -> str:
         )
 
     # Scenario 4: Billing dispute
-    if "cust-" in q_lower or "bill" in q_lower or "charge" in q_lower or "dispute" in q_lower:
-        # Extract customer ID
-        cust_match = re.search(r"CUST-\d{5}", user_query, re.IGNORECASE)
-        cust_id = cust_match.group(0).upper() if cust_match else "Account"
+    if (
+        "cust-" in q_lower
+        or "bill" in q_lower
+        or "charge" in q_lower
+        or "dispute" in q_lower
+        or "<pii_encrypted_" in q_lower
+    ):
+        # Extract customer ID (raw CUST-XXXXX or encrypted placeholder token)
+        cust_match = re.search(
+            r"(<PII_ENCRYPTED_CUSTOMER_ID_\d+>|CUST-\d{5})",
+            user_query,
+            re.IGNORECASE,
+        )
+        if cust_match:
+            raw_id = cust_match.group(0)
+            cust_id = raw_id if raw_id.startswith("<") else raw_id.upper()
+        else:
+            cust_id = "Account"
         return _clean_text(
             f"Dear Customer ({cust_id}),\n\n"
             f"Thank you for contacting Prodapt Customer Support. We have thoroughly reviewed your account and billing history.\n\n"
@@ -234,7 +248,7 @@ def _synthesize_telecom_response(user_query: str, agent_context: str) -> str:
 
 
 def _is_openrouter_operational() -> bool:
-    """Quick 2-second check to see if OpenRouter free tier has quota remaining."""
+    """Quick check to see if OpenRouter free tier has quota remaining."""
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
         return False
@@ -246,15 +260,18 @@ def _is_openrouter_operational() -> bool:
         client = OpenAI(
             api_key=api_key,
             base_url=base_url,
-            http_client=httpx.Client(verify=verify_ssl, timeout=3.0),
+            http_client=httpx.Client(verify=verify_ssl, timeout=5.0),
             max_retries=0,
         )
         res = client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": "hi"}],
-            max_tokens=2,
+            max_tokens=10,
         )
-        return bool(res.choices and res.choices[0].message.content)
+        if not res.choices:
+            return False
+        choice = res.choices[0]
+        return bool(choice.message and (choice.message.content or getattr(choice.message, "reasoning", None)))
     except Exception as exc:
         err = str(exc).lower()
         if "429" in err or "rate limit" in err or "credits" in err:
@@ -269,17 +286,23 @@ def run_customer_comms_crew(
 ) -> str:
     """Execute the Customer Communications Crew to produce the final customer response.
 
-    Exposed to the LangGraph CustomerCommsCrew node.
+    Ensures customer PII (Customer ID, phone, email) is Fernet-encrypted before
+    external LLM calls or communication drafting, and decrypted/restored in the
+    final customer-facing output.
     """
     if not agent_context or not agent_context.strip():
         agent_context = "No specific technical data available."
 
-    # First check if OpenRouter is operational and not rate-limited
+    pii_protector = PIIProtector()
+    protected_query = pii_protector.protect(user_query)
+    protected_context = pii_protector.protect(agent_context)
+
+    detected = pii_protector.audit_summary(f"{user_query}\n{agent_context}")
+    has_pii = pii_protector.has_protected_pii
+
+    # Attempt execution with external LLM if available
     if _is_openrouter_operational():
         try:
-            pii_protector = PIIProtector()
-            protected_query = pii_protector.protect(user_query)
-            protected_context = pii_protector.protect(agent_context)
             crew = create_customer_comms_crew(
                 user_query=protected_query,
                 agent_context=protected_context,
@@ -288,26 +311,48 @@ def run_customer_comms_crew(
             output_text = _clean_text(str(result))
             if output_text and len(output_text) > 30 and "error" not in output_text.lower():
                 if pii_audit is not None:
-                    detected = pii_protector.audit_summary(
-                        f"{user_query}\n{agent_context}"
-                    )
-                    pii_audit["output"] = (
-                        "PII Layer ACTIVE: Fernet-encrypted "
-                        f"{detected} before external LLM; tower IDs and names preserved; "
-                        "decrypted after final response."
-                    )
+                    if has_pii:
+                        encrypted_str = "; ".join(
+                            f"{token}={ciphertext}"
+                            for token, ciphertext in pii_protector.encrypted_payloads.items()
+                        )
+                        pii_audit["output"] = (
+                            f"PII Layer ACTIVE (External LLM): Fernet-encrypted {detected} "
+                            f"payloads: {encrypted_str}; operational network identifiers "
+                            f"preserved; decrypted and restored in final customer response."
+                        )
+                    else:
+                        pii_audit["output"] = (
+                            "PII Layer AUDIT: Inspected customer inquiry and specialist findings; "
+                            "0 customer PII entities detected. Operational network identifiers preserved."
+                        )
                 return pii_protector.restore(output_text)
         except Exception as exc:
             logger.info(f"CrewAI execution note: {exc}; utilizing communications synthesizer.")
 
-    if pii_audit is not None and "output" not in pii_audit:
-        pii_audit["output"] = (
-            "PII Layer BYPASSED: external LLM unavailable; local response synthesizer used, "
-            "so customer data was not sent outside the application."
-        )
+    # Execute with intelligent domain communications synthesizer
+    raw_synth = _synthesize_telecom_response(protected_query, protected_context)
+    final_output = pii_protector.restore(raw_synth)
 
-    # Fallback to intelligent telecom communications synthesizer
-    return _synthesize_telecom_response(user_query, agent_context)
+    if pii_audit is not None:
+        if has_pii:
+            encrypted_str = "; ".join(
+                f"{token}={ciphertext}"
+                for token, ciphertext in pii_protector.encrypted_payloads.items()
+            )
+            pii_audit["output"] = (
+                f"PII Layer ACTIVE: Fernet-encrypted {detected} "
+                f"payloads: {encrypted_str} before customer communication drafting; "
+                f"operational network identifiers (tower IDs/names) preserved; "
+                f"decrypted and restored in final customer response."
+            )
+        else:
+            pii_audit["output"] = (
+                "PII Layer AUDIT: Inspected customer inquiry and specialist findings; "
+                "0 customer PII entities detected. Operational network identifiers preserved."
+            )
+
+    return final_output
 
 
 

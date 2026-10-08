@@ -40,17 +40,43 @@ class PIIProtector:
             restored = restored.replace(token, value)
         return restored
 
-    def audit_summary(self, text: str) -> str:
+    @property
+    def has_protected_pii(self) -> bool:
+        """Return True if any customer PII was detected and encrypted."""
+        return len(self._encrypted_by_token) > 0
+
+    @property
+    def tokens(self) -> list[str]:
+        """Return list of generated token placeholders."""
+        return list(self._encrypted_by_token.keys())
+
+    @property
+    def encrypted_payloads(self) -> dict[str, str]:
+        """Return opaque Fernet ciphertexts for safe audit display."""
+        return {
+            token: encrypted.decode("ascii")
+            for token, encrypted in self._encrypted_by_token.items()
+        }
+
+    def audit_summary(self, text: str | None = None) -> str:
         """Describe detected PII categories without exposing their values."""
-        masked_categories = []
-        for kind, pattern in self._patterns:
-            count = len(pattern.findall(text))
-            if count:
-                masked_categories.append(f"{kind} x{count}")
-        return ", ".join(masked_categories) if masked_categories else "none detected"
+        if text is not None:
+            masked_categories = []
+            for kind, pattern in self._patterns:
+                count = len(pattern.findall(text))
+                if count:
+                    masked_categories.append(f"{kind} x{count}")
+            return ", ".join(masked_categories) if masked_categories else "none detected"
+
+        if not self._token_by_value:
+            return "none detected"
+        counts: dict[str, int] = {}
+        for (kind, _) in self._token_by_value.keys():
+            counts[kind] = counts.get(kind, 0) + 1
+        return ", ".join(f"{kind} x{count}" for kind, count in counts.items())
 
     def _token(self, kind: str, value: str) -> str:
-        key = (kind, value)
+        key = (kind, value.upper() if kind == "CUSTOMER_ID" else value)
         token = self._token_by_value.get(key)
         if token is None:
             token = f"<PII_ENCRYPTED_{kind}_{len(self._token_by_value) + 1}>"
