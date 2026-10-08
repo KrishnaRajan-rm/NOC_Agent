@@ -386,6 +386,15 @@ def ask_sql(question: str) -> str:
             ]
             return "Towers with the highest packet loss (based on latest recorded sample):\n" + "\n".join(lines)
 
+    # Fast-path for regional tower counts, which should not depend on LLM SQL generation.
+    if "tower" in question_lower and any(
+        phrase in question_lower for phrase in ("how many", "number of", "count")
+    ):
+        for region in ("Midwest", "Northeast", "Southeast", "Southwest", "West"):
+            if region.lower() in question_lower:
+                tower_count = _query_tower_count_by_region(region)
+                return f"There are {tower_count} towers in the {region} region."
+
     # Fast-path for Midwest 6-hour outage
     if ("6-hour" in question_lower or "6 hour" in question_lower or "12 september" in question_lower or "september 12" in question_lower) and "midwest" in question_lower:
         outage = _query_midwest_6hr_outage()
@@ -477,6 +486,16 @@ def _query_latest_packet_loss(limit: int = 3):
             """,
             (limit,),
         ).fetchall()
+
+
+def _query_tower_count_by_region(region: str) -> int:
+    """Return the number of towers in a region from the inventory table."""
+    with sqlite3.connect(str(DATABASE_PATH)) as conn:
+        row = conn.execute(
+            "SELECT COUNT(*) FROM network_towers WHERE region = ?",
+            (region,),
+        ).fetchone()
+    return int(row[0])
 
 
 def _query_midwest_6hr_outage():
