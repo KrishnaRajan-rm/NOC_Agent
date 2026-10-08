@@ -278,16 +278,17 @@ def customer_comms_crew_node(state: AgentState) -> dict:
         pii_audit=pii_audit,
     )
 
-    trace_entry = {
-        "worker": "CustomerCommsCrew",
-        "output": final_text,
-    }
-    trace_entries = state.get("execution_trace", []) + [trace_entry]
+    trace_entries = list(state.get("execution_trace", []))
     if pii_audit.get("output"):
         trace_entries.append({
             "worker": "PIILayer",
             "output": pii_audit["output"],
         })
+
+    trace_entries.append({
+        "worker": "CustomerCommsCrew",
+        "output": final_text,
+    })
 
     return {
         "final_response": final_text,

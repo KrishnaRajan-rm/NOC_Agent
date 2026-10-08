@@ -318,8 +318,9 @@ def run_customer_comms_crew(
                         )
                         pii_audit["output"] = (
                             f"PII Layer ACTIVE (External LLM): Fernet-encrypted {detected} "
-                            f"payloads: {encrypted_str}; operational network identifiers "
-                            f"preserved; decrypted and restored in final customer response."
+                            f"encrypted payloads sent to external LLM: {encrypted_str}; "
+                            f"operational network identifiers preserved; decrypted and "
+                            f"restored in final customer response."
                         )
                     else:
                         pii_audit["output"] = (
@@ -342,7 +343,9 @@ def run_customer_comms_crew(
             )
             pii_audit["output"] = (
                 f"PII Layer ACTIVE: Fernet-encrypted {detected} "
-                f"payloads: {encrypted_str} before customer communication drafting; "
+                f"encrypted payloads prepared before customer communication drafting: "
+                f"{encrypted_str}; external LLM was unavailable, so they were not sent "
+                f"outside the application; "
                 f"operational network identifiers (tower IDs/names) preserved; "
                 f"decrypted and restored in final customer response."
             )
